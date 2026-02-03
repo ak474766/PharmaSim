@@ -1,0 +1,59 @@
+.section {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--bg-secondary);
+}
+
+.container {
+    display: flex;
+    width: 400vw;
+    /* 4 panels * 100vw */
+    height: 100%;
+}
+
+.panel {
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 5%;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+.panel1 {
+    background: radial-gradient(circle at center, #101010, var(--bg-secondary));
+}
+
+.panel2 {
+    background: radial-gradient(circle at center, #151515, var(--bg-secondary));
+}
+
+.panel3 {
+    background: radial-gradient(circle at center, #1a1a1a, var(--bg-secondary));
+}
+
+.panel4 {
+    background: radial-gradient(circle at center, #111111, var(--bg-secondary));
+}
+
+.step {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    background: linear-gradient(180deg, #fff, #666);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.desc {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    color: var(--text-secondary);
+    max-width: 600px;
+    text-align: center;
+}

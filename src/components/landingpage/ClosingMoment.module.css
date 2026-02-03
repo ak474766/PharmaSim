@@ -1,0 +1,36 @@
+.section {
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+}
+
+.container {
+    text-align: center;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 40px;
+    color: var(--text-primary);
+    font-weight: 300;
+}
+
+.cta {
+    display: inline-block;
+    padding: 15px 40px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: #fff;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.3s ease;
+}
+
+.cta:hover {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+}

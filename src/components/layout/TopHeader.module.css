@@ -1,0 +1,68 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.titleSection {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.iconBtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1f2937;
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.iconBtn:hover {
+    background: #374151;
+}
+
+.primaryBtn {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 99px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.primaryBtn:hover {
+    background: #1d4ed8;
+}

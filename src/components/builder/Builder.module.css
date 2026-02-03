@@ -1,0 +1,340 @@
+/* Main Container - Flex Layout */
+.container {
+    display: flex;
+    height: calc(100vh - 80px);
+    /* Slightly taller */
+    gap: 16px;
+    width: 100%;
+    padding: 16px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Left Sidebar */
+.sidebar {
+    width: 300px;
+    min-width: 300px;
+    background: #0e1016;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #374151 #0e1016;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: #0e1016;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #374151;
+    border-radius: 10px;
+}
+
+.header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Element List Grid */
+.elementList h3 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9ca3af;
+    margin: 20px 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.elementsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.elementCard {
+    background: #151921;
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 8px 10px 8px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #fff;
+}
+
+.elementCard b {
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.elementCard small {
+    font-size: 0.55rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.elementCard:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.elementCard.selected {
+    background: rgba(37, 99, 235, 0.2);
+    border-color: #3b82f6;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+/* Controls Section */
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn {
+    padding: 12px 16px;
+    background: #1f2937;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: #e5e7eb;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn:hover {
+    background: #374151;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn.active {
+    background: #dc2626;
+    border-color: #ef4444;
+}
+
+.btnPrimary {
+    background: #2563eb;
+    border-color: #3b82f6;
+}
+
+.btnPrimary:hover {
+    background: #1d4ed8;
+}
+
+.btnSuccess {
+    background: #059669;
+    border-color: #10b981;
+}
+
+.btnSuccess:hover {
+    background: #047857;
+}
+
+/* AI Feedback Card */
+.aiFeedback {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.aiFeedback h4 {
+    font-size: 0.85rem;
+    color: #60a5fa;
+    margin: 0 0 8px 0;
+}
+
+.aiFeedback p {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    line-height: 1.4;
+    margin: 0 0 12px 0;
+}
+
+.feedbackStats {
+    display: flex;
+    gap: 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* Canvas Area - Right Side */
+.canvasArea {
+    flex: 1;
+    background: #050508;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+    /* Grid pattern background */
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+}
+
+.canvasHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.statusMsg {
+    font-size: 0.85rem;
+    color: #9ca3af;
+}
+
+.propTags {
+    display: flex;
+    gap: 12px;
+}
+
+.tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+/* Old classes for backwards compatibility if needed */
+.builderContainer {
+    display: flex;
+    height: 700px;
+    gap: 20px;
+    width: 100%;
+}
+
+.palette {
+    width: 260px;
+    background: #0e1016;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.canvasContainer {
+    flex: 1;
+    background: #050505;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.properties {
+    width: 300px;
+    background: #0e1016;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.propSection {
+    margin-bottom: 24px;
+    background: #151921;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.propHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.propLabel {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+}
+
+.propValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.propBar {
+    height: 4px;
+    background: #1f2937;
+    border-radius: 2px;
+    margin-top: 12px;
+    overflow: hidden;
+}
+
+.propFill {
+    height: 100%;
+    border-radius: 2px;
+}
+
+.hintCard {
+    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: auto;
+}
+
+.hintTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #60a5fa;
+}
+
+.hintText {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+.iconPurple {
+    color: #8b5cf6;
+}

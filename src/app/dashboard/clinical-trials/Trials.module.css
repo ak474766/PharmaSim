@@ -1,0 +1,620 @@
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #050505;
+    color: #fff;
+    overflow: hidden;
+}
+
+.gameArea {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.statsBar {
+    display: flex;
+    gap: 20px;
+    background: #1f2937;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.statItem {
+    flex: 1;
+}
+
+.statLabel {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.statValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.statValueSm {
+    font-size: 0.9rem;
+    color: #fff;
+    margin-top: 4px;
+    text-align: right;
+}
+
+.statBarContainer {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.statBarFill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.mainStage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
+.card {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card h1 {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+    color: #fff;
+}
+
+.card p {
+    color: #9ca3af;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.phaseBadge {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.choiceBtn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px;
+    border-radius: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.choiceBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #60a5fa;
+    transform: translateX(4px);
+}
+
+.choiceText {
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.choiceEffect {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+.btnPrimary {
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+.btnPrimary:hover {
+    background: #2563eb;
+}
+
+.btnSecondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 12px 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btnSecondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.logConsole {
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 8px;
+    height: 150px;
+    padding: 12px;
+    font-family: monospace;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.logTitle {
+    color: #4ade80;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.logList {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.logItem {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.lossCard h1 {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.winCard h1 {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.xpReward {
+    font-size: 1.2rem;
+    margin-bottom: 24px;
+    color: #fbbf24;
+    font-weight: 700;
+}
+
+/* ===== DASHBOARD STYLES ===== */
+.dashboardArea {
+    flex: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+}
+
+.dashboardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.dashboardHeader h2 {
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+/* Empty State */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    margin-top: 40px;
+}
+
+.emptyIcon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.emptyState h2 {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 12px;
+}
+
+.emptyState p {
+    color: #9ca3af;
+    max-width: 400px;
+    margin-bottom: 32px;
+}
+
+.emptyActions {
+    display: flex;
+    gap: 16px;
+}
+
+/* Trials Grid */
+.trialsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.trialCard {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.trialCard:hover {
+    border-color: #3b82f6;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+}
+
+.trialImage {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.moleculeIcon {
+    font-size: 3rem;
+    opacity: 0.9;
+}
+
+.trialInfo {
+    padding: 16px;
+}
+
+.trialInfo h3 {
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.trialMission {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-bottom: 12px;
+}
+
+.trialStats {
+    display: flex;
+    gap: 16px;
+    font-size: 0.85rem;
+    color: #60a5fa;
+    margin-bottom: 12px;
+}
+
+.trialStatus {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.trialStatus.pending {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+}
+
+.trialStatus.in_progress {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+}
+
+.trialStatus.completed {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+}
+
+.trialStatus.failed {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+/* ===== ROADMAP STYLES ===== */
+.roadmapArea {
+    flex: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.backBtn {
+    background: transparent;
+    border: none;
+    color: #60a5fa;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-bottom: 24px;
+    padding: 8px 0;
+}
+
+.backBtn:hover {
+    color: #3b82f6;
+}
+
+.loadingState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px;
+    gap: 20px;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(59, 130, 246, 0.2);
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.roadmapHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 40px;
+    padding: 24px;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 16px;
+}
+
+.roadmapSummary {
+    flex: 1;
+}
+
+.roadmapSummary h2 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    color: #fff;
+}
+
+.roadmapSummary p {
+    color: #9ca3af;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.successProb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.successProb span {
+    font-size: 0.85rem;
+    color: #9ca3af;
+}
+
+.probBar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 200px;
+}
+
+.probFill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #10b981);
+    transition: width 0.5s ease;
+}
+
+.probValue {
+    font-weight: 700;
+    color: #10b981 !important;
+}
+
+.proceedBtn {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: #fff;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+}
+
+.proceedBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Phases Timeline */
+.phasesTimeline {
+    position: relative;
+    padding-left: 40px;
+}
+
+.phasesTimeline::before {
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #3b82f6, #8b5cf6, #10b981);
+}
+
+.phaseItem {
+    position: relative;
+    padding: 24px;
+    margin-bottom: 24px;
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+
+.phaseNumber {
+    position: absolute;
+    left: -40px;
+    top: 24px;
+    width: 32px;
+    height: 32px;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #fff;
+    z-index: 1;
+}
+
+.phaseContent h3 {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.phaseDuration {
+    font-size: 0.85rem;
+    color: #60a5fa;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.phaseContent p {
+    color: #9ca3af;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.phaseActivities {
+    margin-bottom: 12px;
+}
+
+.phaseActivities strong {
+    font-size: 0.85rem;
+    color: #a78bfa;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.phaseActivities ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #d1d5db;
+}
+
+.phaseActivities li {
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+}
+
+.phaseRisk {
+    padding: 10px 14px;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #fca5a5;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.eventDesc {
+    text-align: left;
+}
+
+.reason {
+    font-size: 1.1rem;
+    color: #fca5a5;
+    margin-bottom: 24px;
+}
