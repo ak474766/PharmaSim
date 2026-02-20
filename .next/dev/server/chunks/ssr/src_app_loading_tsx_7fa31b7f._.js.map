@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/khana/OneDrive/Desktop/PharmaSim/src/app/loading.tsx"],"sourcesContent":["export default function Loading() {\n    return (\n        <div style={{ minHeight: '100vh', background: '#050505', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>\n            Loading...\n        </div>\n    );\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACpB,qBACI,8OAAC;QAAI,OAAO;YAAE,WAAW;YAAS,YAAY;YAAW,OAAO;YAAQ,SAAS;YAAQ,YAAY;YAAU,gBAAgB;QAAS;kBAAG;;;;;;AAInJ"}}]
-}

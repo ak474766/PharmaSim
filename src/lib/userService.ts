@@ -20,6 +20,24 @@ export interface Achievement {
     unlockedAt: number; // Timestamp
 }
 
+export interface CoinTransaction {
+    id: string;
+    amount: number;
+    type: 'earned' | 'spent';
+    reason: string;
+    timestamp: number;
+}
+
+export interface Redemption {
+    id: string;
+    rewardId: string;
+    rewardTitle: string;
+    coinsCost: number;
+    voucherCode: string;
+    redeemedAt: number;
+    status: 'active' | 'used' | 'expired';
+}
+
 export interface UserProfile {
     uid: string;
     displayName: string;
@@ -28,10 +46,13 @@ export interface UserProfile {
     level: number;
     reputation: number;
     moleculesDiscovered: number;
+    coins: number;
     dailyQuests?: Quest[];
     lastLogin?: number;
     achievements?: Achievement[];
     topicMastery?: Record<string, number>;
+    coinTransactions?: CoinTransaction[];
+    redemptions?: Redemption[];
 }
 
 const QUEST_TEMPLATES: Omit<Quest, 'progress' | 'completed'>[] = [
@@ -69,10 +90,13 @@ export const UserService = {
                 level: 1,
                 reputation: 100,
                 moleculesDiscovered: 0,
+                coins: 0,
                 dailyQuests: newQuests,
                 lastLogin: Date.now(),
                 achievements: [],
-                topicMastery: { kinetics: 1, regulatory: 1, pharmacology: 1, chemistry: 1 }
+                topicMastery: { kinetics: 1, regulatory: 1, pharmacology: 1, chemistry: 1 },
+                coinTransactions: [],
+                redemptions: []
             };
             await setDoc(docRef, newProfile);
             return newProfile;
@@ -115,7 +139,7 @@ export const UserService = {
         }
     },
 
-    // Unlock Achievement
+    // Unlock Achievement (also awards coins!)
     async unlockAchievement(uid: string, achievement: Omit<Achievement, 'unlockedAt'>) {
         const docRef = doc(db, 'users', uid);
         const docSnap = await getDoc(docRef);
@@ -128,27 +152,41 @@ export const UserService = {
                 await updateDoc(docRef, {
                     achievements: [...(data.achievements || []), newAchievement]
                 });
+
+                // Award coins for achievement unlock
+                await UserService.addCoins(uid, 100, `🏆 Achievement: ${achievement.title}`);
+
                 return newAchievement;
             }
         }
         return null;
     },
 
-    // Add XP and check for level up
+    // Add XP, check for level up, and award coins
     async addXP(uid: string, amount: number) {
         const docRef = doc(db, 'users', uid);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
             const data = docSnap.data() as UserProfile;
+            const oldLevel = data.level;
             const newXP = data.xp + amount;
-            const newLevel = Math.floor(newXP / 1000) + 1; // Simple level formula: 1000 XP per level
+            const newLevel = Math.floor(newXP / 1000) + 1;
 
             await updateDoc(docRef, {
                 xp: newXP,
                 level: newLevel,
-                moleculesDiscovered: data.moleculesDiscovered + 1 // Assuming 1 molecule per XP grant for now
+                moleculesDiscovered: data.moleculesDiscovered + 1
             });
+
+            // Award 30 coins for building a molecule
+            await UserService.addCoins(uid, 30, '🧬 Molecule built');
+
+            // Bonus coins on level up
+            if (newLevel > oldLevel) {
+                await UserService.addCoins(uid, 50, `⬆️ Level up! Now Lvl ${newLevel}`);
+            }
+
             return { newXP, newLevel };
         }
         return null;
@@ -188,5 +226,105 @@ export const UserService = {
             return newMastery;
         }
         return 1;
+    },
+
+    // ===== COIN SYSTEM =====
+
+    // Add coins to user balance
+    async addCoins(uid: string, amount: number, reason: string): Promise<number> {
+        const docRef = doc(db, 'users', uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data() as UserProfile;
+            const newBalance = (data.coins || 0) + amount;
+            const transaction: CoinTransaction = {
+                id: `txn_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+                amount,
+                type: 'earned',
+                reason,
+                timestamp: Date.now()
+            };
+
+            const transactions = [...(data.coinTransactions || []), transaction].slice(-50); // Keep last 50
+
+            await updateDoc(docRef, {
+                coins: newBalance,
+                coinTransactions: transactions
+            });
+            return newBalance;
+        }
+        return 0;
+    },
+
+    // Spend coins on a reward
+    async spendCoins(uid: string, amount: number, reason: string): Promise<{ success: boolean; balance: number }> {
+        const docRef = doc(db, 'users', uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data() as UserProfile;
+            const currentBalance = data.coins || 0;
+
+            if (currentBalance < amount) {
+                return { success: false, balance: currentBalance };
+            }
+
+            const newBalance = currentBalance - amount;
+            const transaction: CoinTransaction = {
+                id: `txn_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+                amount,
+                type: 'spent',
+                reason,
+                timestamp: Date.now()
+            };
+
+            const transactions = [...(data.coinTransactions || []), transaction].slice(-50);
+
+            await updateDoc(docRef, {
+                coins: newBalance,
+                coinTransactions: transactions
+            });
+            return { success: true, balance: newBalance };
+        }
+        return { success: false, balance: 0 };
+    },
+
+    // Redeem a reward
+    async redeemReward(
+        uid: string,
+        rewardId: string,
+        rewardTitle: string,
+        coinsCost: number
+    ): Promise<{ success: boolean; voucherCode?: string; balance?: number }> {
+        // First spend the coins
+        const spendResult = await UserService.spendCoins(uid, coinsCost, `Redeemed: ${rewardTitle}`);
+        if (!spendResult.success) {
+            return { success: false };
+        }
+
+        // Generate a voucher code
+        const voucherCode = `PHARMA-${rewardId.toUpperCase().slice(0, 4)}-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+
+        const redemption: Redemption = {
+            id: `red_${Date.now()}`,
+            rewardId,
+            rewardTitle,
+            coinsCost,
+            voucherCode,
+            redeemedAt: Date.now(),
+            status: 'active'
+        };
+
+        const docRef = doc(db, 'users', uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const data = docSnap.data() as UserProfile;
+            await updateDoc(docRef, {
+                redemptions: [...(data.redemptions || []), redemption]
+            });
+        }
+
+        return { success: true, voucherCode, balance: spendResult.balance };
     }
 };

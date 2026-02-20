@@ -119,7 +119,7 @@ export default function QuizPage() {
                                 return (
                                     <div key={t.id} className={styles.nodeCard} onClick={() => startQuiz(t.id)}>
                                         <div className={styles.nodeIcon} style={{
-                                            boxShadow: `0 0 ${mastery * 10}px ${mastery > 3 ? '#10b981' : '#3b82f6'}`
+                                            boxShadow: `0 0 ${mastery * 10}px ${mastery > 3 ? '#00ACC1' : '#00ACC1'}`
                                         }}>
                                             {mastery.toFixed(1)}
                                         </div>

@@ -108,6 +108,20 @@ export default function ClinicalTrialsPage() {
         setLoadingRoadmap(false);
     }, []);
 
+    // Handle deleting a trial card
+    const handleDeleteTrial = useCallback(async (e: React.MouseEvent, trialId: string) => {
+        e.stopPropagation(); // Prevent card click
+        if (!confirm('Are you sure you want to delete this trial? This action cannot be undone.')) return;
+        try {
+            const success = await TrialService.deleteSubmission(trialId);
+            if (success) {
+                setSubmissions(prev => prev.filter(t => t.id !== trialId));
+            }
+        } catch (err) {
+            console.error('Failed to delete trial:', err);
+        }
+    }, []);
+
     useEffect(() => {
         if (loading || !user || submissions.length === 0 || selectedTrial) return;
 
@@ -488,11 +502,56 @@ export default function ClinicalTrialsPage() {
                                             style={{
                                                 background: trial.generatedImageUrl
                                                     ? `url(${trial.generatedImageUrl}) center/cover`
-                                                    : `linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%)`
+                                                    : `linear-gradient(135deg, #0a1a2a 0%, #0d2436 50%, #0a1520 100%)`
                                             }}
                                         >
                                             {!trial.generatedImageUrl && (
-                                                <div className={styles.moleculeIcon}>🧬</div>
+                                                <svg viewBox="0 0 300 140" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                                                    <defs>
+                                                        <radialGradient id={`glow-${trial.id}`} cx="50%" cy="50%" r="50%">
+                                                            <stop offset="0%" stopColor="#00ACC1" stopOpacity="0.12" />
+                                                            <stop offset="100%" stopColor="transparent" />
+                                                        </radialGradient>
+                                                    </defs>
+                                                    <circle cx="150" cy="70" r="55" fill={`url(#glow-${trial.id})`} />
+                                                    {/* Hexagonal ring */}
+                                                    <polygon points="130,45 155,35 175,50 170,75 145,85 125,70" stroke="#4DD0E1" strokeWidth="1.2" fill="none" opacity="0.4" />
+                                                    <polygon points="135,50 153,42 168,53 165,72 148,80 132,68" stroke="#00ACC1" strokeWidth="0.8" fill="none" opacity="0.2" />
+                                                    {/* Atoms at vertices */}
+                                                    <circle cx="130" cy="45" r="4" fill="#00ACC1" opacity="0.7">
+                                                        <animate attributeName="r" values="4;5;4" dur="3s" repeatCount="indefinite" />
+                                                    </circle>
+                                                    <circle cx="155" cy="35" r="3" fill="#4DD0E1" opacity="0.6" />
+                                                    <circle cx="175" cy="50" r="4.5" fill="#80DEEA" opacity="0.5">
+                                                        <animate attributeName="r" values="4.5;5.5;4.5" dur="4s" repeatCount="indefinite" />
+                                                    </circle>
+                                                    <circle cx="170" cy="75" r="3" fill="#4DD0E1" opacity="0.6" />
+                                                    <circle cx="145" cy="85" r="3.5" fill="#00ACC1" opacity="0.5" />
+                                                    <circle cx="125" cy="70" r="3" fill="#80DEEA" opacity="0.6" />
+                                                    {/* Side chains */}
+                                                    <line x1="130" y1="45" x2="105" y2="35" stroke="#4DD0E1" strokeWidth="1" opacity="0.25" />
+                                                    <circle cx="105" cy="35" r="2.5" fill="#4DD0E1" opacity="0.35" />
+                                                    <line x1="175" y1="50" x2="200" y2="40" stroke="#80DEEA" strokeWidth="1" opacity="0.25" />
+                                                    <circle cx="200" cy="40" r="2" fill="#80DEEA" opacity="0.3" />
+                                                    <line x1="145" y1="85" x2="140" y2="108" stroke="#00ACC1" strokeWidth="1" opacity="0.2" />
+                                                    <circle cx="140" cy="108" r="2" fill="#00ACC1" opacity="0.3" />
+                                                    {/* Floating particles */}
+                                                    <circle cx="80" cy="100" r="1.5" fill="#4DD0E1" opacity="0.2">
+                                                        <animate attributeName="cy" values="100;90;100" dur="5s" repeatCount="indefinite" />
+                                                    </circle>
+                                                    <circle cx="230" cy="30" r="1.5" fill="#80DEEA" opacity="0.2">
+                                                        <animate attributeName="cy" values="30;22;30" dur="4s" repeatCount="indefinite" />
+                                                    </circle>
+                                                    <circle cx="60" cy="50" r="1" fill="#00ACC1" opacity="0.15">
+                                                        <animate attributeName="cy" values="50;44;50" dur="6s" repeatCount="indefinite" />
+                                                    </circle>
+                                                    <circle cx="250" cy="90" r="1" fill="#4DD0E1" opacity="0.15">
+                                                        <animate attributeName="cy" values="90;84;90" dur="5.5s" repeatCount="indefinite" />
+                                                    </circle>
+                                                    {/* Stats indicator lines */}
+                                                    <line x1="30" y1="120" x2={30 + trial.stats.efficacy * 0.8} y2="120" stroke="#00ACC1" strokeWidth="2" opacity="0.2" strokeLinecap="round" />
+                                                    <line x1="30" y1="128" x2={30 + trial.stats.safety * 0.8} y2="128" stroke="#4DD0E1" strokeWidth="2" opacity="0.15" strokeLinecap="round" />
+                                                </svg>
                                             )}
                                         </div>
                                         <div className={styles.trialInfo}>
@@ -508,6 +567,13 @@ export default function ClinicalTrialsPage() {
                                                 {trial.status === 'completed' && '✅ Completed'}
                                                 {trial.status === 'failed' && '❌ Failed'}
                                             </div>
+                                            <button
+                                                className={styles.btnDeleteTrial}
+                                                onClick={(e) => handleDeleteTrial(e, trial.id)}
+                                                title="Delete this trial"
+                                            >
+                                                🗑️ Delete
+                                            </button>
                                         </div>
                                     </div>
                                 ))}
@@ -651,21 +717,21 @@ export default function ClinicalTrialsPage() {
                 <div className={styles.statsBar}>
                     <div className={styles.statItem}>
                         <div className={styles.statLabel}>Budget</div>
-                        <div className={styles.statValue} style={{ color: stats.budget < 2000000 ? '#ef4444' : '#10b981' }}>
+                        <div className={styles.statValue} style={{ color: stats.budget < 2000000 ? '#ef4444' : '#00ACC1' }}>
                             ${(stats.budget / 1000000).toFixed(1)}M
                         </div>
                     </div>
                     <div className={styles.statItem}>
                         <div className={styles.statLabel}>Efficacy</div>
                         <div className={styles.statBarContainer}>
-                            <div className={styles.statBarFill} style={{ width: `${stats.efficacy}%`, background: '#3b82f6' }} />
+                            <div className={styles.statBarFill} style={{ width: `${stats.efficacy}%`, background: '#00ACC1' }} />
                         </div>
                         <div className={styles.statValueSm}>{stats.efficacy}%</div>
                     </div>
                     <div className={styles.statItem}>
                         <div className={styles.statLabel}>Safety</div>
                         <div className={styles.statBarContainer}>
-                            <div className={styles.statBarFill} style={{ width: `${stats.safety}%`, background: stats.safety < 50 ? '#ef4444' : '#10b981' }} />
+                            <div className={styles.statBarFill} style={{ width: `${stats.safety}%`, background: stats.safety < 50 ? '#ef4444' : '#00ACC1' }} />
                         </div>
                         <div className={styles.statValueSm}>{stats.safety}%</div>
                     </div>
@@ -724,7 +790,7 @@ export default function ClinicalTrialsPage() {
                     {gameState === 'intro' && (
                         <div className={styles.card}>
                             <h1>🧪 {selectedTrial?.moleculeName}</h1>
-                            <div className={styles.badge} style={{ background: '#8b5cf6', width: 'fit-content' }}>
+                            <div className={styles.badge} style={{ background: '#4DD0E1', width: 'fit-content' }}>
                                 AI-Powered Clinical Trial
                             </div>
                             <p style={{ margin: '20px 0' }}>
@@ -752,7 +818,7 @@ export default function ClinicalTrialsPage() {
                                     )}
                                 </div>
                             ) : currentEvent ? (
-                                <div className={styles.card} style={{ borderColor: '#3b82f6' }}>
+                                <div className={styles.card} style={{ borderColor: '#00ACC1' }}>
                                     <div className={styles.phaseBadge}>
                                         {selectedTrial?.roadmap?.phases[currentPhaseIndex]?.name}
                                     </div>
@@ -794,7 +860,7 @@ export default function ClinicalTrialsPage() {
                                         className={styles.victoryParticle}
                                         style={{
                                             left: `${Math.random() * 100}%`,
-                                            background: ['#10b981', '#34d399', '#6ee7b7', '#fbbf24', '#a78bfa', '#60a5fa'][i % 6],
+                                            background: ['#00ACC1', '#4DD0E1', '#80DEEA', '#fbbf24', '#80DEEA', '#4DD0E1'][i % 6],
                                             width: `${4 + Math.random() * 8}px`,
                                             height: `${4 + Math.random() * 8}px`,
                                             animationDuration: `${2 + Math.random() * 4}s`,
@@ -814,19 +880,19 @@ export default function ClinicalTrialsPage() {
                                 {/* Final Stats */}
                                 <div className={styles.victoryStats}>
                                     <div className={styles.victoryStat}>
-                                        <span className={styles.victoryStatValue} style={{ color: '#10b981' }}>
+                                        <span className={styles.victoryStatValue} style={{ color: '#00ACC1' }}>
                                             ${(stats.budget / 1000000).toFixed(1)}M
                                         </span>
                                         <span className={styles.victoryStatLabel}>Budget Left</span>
                                     </div>
                                     <div className={styles.victoryStat}>
-                                        <span className={styles.victoryStatValue} style={{ color: '#60a5fa' }}>
+                                        <span className={styles.victoryStatValue} style={{ color: '#4DD0E1' }}>
                                             {stats.efficacy}%
                                         </span>
                                         <span className={styles.victoryStatLabel}>Efficacy</span>
                                     </div>
                                     <div className={styles.victoryStat}>
-                                        <span className={styles.victoryStatValue} style={{ color: '#a78bfa' }}>
+                                        <span className={styles.victoryStatValue} style={{ color: '#80DEEA' }}>
                                             {stats.safety}%
                                         </span>
                                         <span className={styles.victoryStatLabel}>Safety</span>
@@ -870,19 +936,19 @@ export default function ClinicalTrialsPage() {
                                 {/* Stats at Failure */}
                                 <div className={styles.gameoverStats}>
                                     <div className={styles.gameoverStat}>
-                                        <span className={styles.gameoverStatValue} style={{ color: stats.budget <= 0 ? '#ef4444' : '#10b981' }}>
+                                        <span className={styles.gameoverStatValue} style={{ color: stats.budget <= 0 ? '#ef4444' : '#00ACC1' }}>
                                             ${(stats.budget / 1000000).toFixed(1)}M
                                         </span>
                                         <span className={styles.gameoverStatLabel}>Budget</span>
                                     </div>
                                     <div className={styles.gameoverStat}>
-                                        <span className={styles.gameoverStatValue} style={{ color: '#60a5fa' }}>
+                                        <span className={styles.gameoverStatValue} style={{ color: '#4DD0E1' }}>
                                             {stats.efficacy}%
                                         </span>
                                         <span className={styles.gameoverStatLabel}>Efficacy</span>
                                     </div>
                                     <div className={styles.gameoverStat}>
-                                        <span className={styles.gameoverStatValue} style={{ color: stats.safety <= 20 ? '#ef4444' : '#a78bfa' }}>
+                                        <span className={styles.gameoverStatValue} style={{ color: stats.safety <= 20 ? '#ef4444' : '#80DEEA' }}>
                                             {stats.safety}%
                                         </span>
                                         <span className={styles.gameoverStatLabel}>Safety</span>

@@ -279,7 +279,7 @@ export const AiService = {
     /**
      * Generate a placeholder image URL for a molecule
      */
-    generateMoleculeImageUrl(moleculeName: string, color: string = '#3b82f6'): string {
+    generateMoleculeImageUrl(moleculeName: string, color: string = '#00ACC1'): string {
         const encodedName = encodeURIComponent(moleculeName.slice(0, 20));
         const bgColor = color.replace('#', '');
         return `https://via.placeholder.com/400x300/${bgColor}/ffffff?text=${encodedName}`;

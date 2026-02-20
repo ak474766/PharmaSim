@@ -375,7 +375,7 @@ export default function Builder() {
                 )}
 
                 <div className={styles.header}>
-                    <h2><span style={{ color: '#60a5fa' }}>LABORATORY:</span> {currentMission.title}</h2>
+                    <h2><span style={{ color: '#4DD0E1' }}>LABORATORY:</span> {currentMission.title}</h2>
                     <p style={{ fontSize: '0.8rem', color: '#9ca3af', marginTop: '4px' }}>{currentMission.description}</p>
                 </div>
 
@@ -497,7 +497,7 @@ export default function Builder() {
                                             background: 'rgba(59, 130, 246, 0.2)',
                                             border: '1px solid rgba(59, 130, 246, 0.3)',
                                             borderRadius: '4px',
-                                            color: '#60a5fa',
+                                            color: '#4DD0E1',
                                             cursor: 'pointer'
                                         }}
                                         title={ex.smiles}
@@ -517,7 +517,7 @@ export default function Builder() {
                     <button
                         className={styles.btn}
                         onClick={() => setShowReference(true)}
-                        style={{ background: 'rgba(139, 92, 246, 0.3)', borderColor: '#8b5cf6' }}
+                        style={{ background: 'rgba(139, 92, 246, 0.3)', borderColor: '#4DD0E1' }}
                     >
                         📚 Chemistry Reference
                     </button>
@@ -558,12 +558,12 @@ export default function Builder() {
                                 fontSize: '0.75rem',
                                 fontWeight: 600,
                                 background: validationResult.valid ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                                border: `1px solid ${validationResult.valid ? '#10b981' : '#ef4444'}`,
-                                color: validationResult.valid ? '#10b981' : '#ef4444'
+                                border: `1px solid ${validationResult.valid ? '#00ACC1' : '#ef4444'}`,
+                                color: validationResult.valid ? '#00ACC1' : '#ef4444'
                             }}>
                                 {validationResult.valid ? '✓ Valid' : '✗ Invalid'}
                                 {validationResult.name && (
-                                    <span style={{ color: '#60a5fa', marginLeft: '4px' }}>• {validationResult.name}</span>
+                                    <span style={{ color: '#4DD0E1', marginLeft: '4px' }}>• {validationResult.name}</span>
                                 )}
                             </div>
                         )}
@@ -576,7 +576,7 @@ export default function Builder() {
                                 fontWeight: 600,
                                 background: 'rgba(96, 165, 250, 0.15)',
                                 border: '1px solid rgba(96, 165, 250, 0.4)',
-                                color: '#60a5fa'
+                                color: '#4DD0E1'
                             }}>
                                 {validationResult.formula} • {validationResult.molecularWeight} g/mol
                             </div>
@@ -584,13 +584,13 @@ export default function Builder() {
                     </div>
                     <div className={styles.propTags}>
                         {validationResult?.properties?.complexity !== undefined && (
-                            <span className={styles.tag} style={{ color: '#a78bfa' }}>
+                            <span className={styles.tag} style={{ color: '#80DEEA' }}>
                                 Complexity: {validationResult.properties.complexity}%
                             </span>
                         )}
                         <span className={styles.tag}>Stab: {Math.round(properties.stability)}%</span>
                         <span className={styles.tag}>Eff: {Math.round(properties.efficacy)}%</span>
-                        <span className={styles.tag} style={{ color: properties.toxicity === 'Low' ? '#10b981' : '#ef4444' }}>
+                        <span className={styles.tag} style={{ color: properties.toxicity === 'Low' ? '#00ACC1' : '#ef4444' }}>
                             Tox: {properties.toxicity}
                         </span>
                     </div>

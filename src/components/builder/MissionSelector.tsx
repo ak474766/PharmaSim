@@ -55,8 +55,8 @@ export default function MissionSelector({ userLevel, onSelectMission, currentMis
                                 minWidth: '120px',
                                 padding: '10px',
                                 borderRadius: '10px',
-                                background: isActive ? '#2563eb' : (isLocked ? '#1f2937' : '#1f2937'),
-                                border: isActive ? '1px solid #60a5fa' : '1px solid #374151',
+                                background: isActive ? '#00838F' : (isLocked ? '#1f2937' : '#1f2937'),
+                                border: isActive ? '1px solid #4DD0E1' : '1px solid #374151',
                                 cursor: isLocked ? 'not-allowed' : 'pointer',
                                 opacity: isLocked ? 0.5 : 1,
                                 display: 'flex',
@@ -118,7 +118,7 @@ export default function MissionSelector({ userLevel, onSelectMission, currentMis
                 border: '1px solid rgba(255,255,255,0.05)',
                 lineHeight: '1.4'
             }}>
-                <span style={{ color: '#60a5fa', fontWeight: 600 }}>Objective:</span> {
+                <span style={{ color: '#4DD0E1', fontWeight: 600 }}>Objective:</span> {
                     SYLLABUS_DATA.find(s => s.level === userLevel)?.learningObjective || "Master the syllabus."
                 }
             </div>

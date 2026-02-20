@@ -6,69 +6,133 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import styles from './Sidebar.module.css';
 import { auth } from '@/lib/firebase';
+import PharmaLogo from '@/components/ui/PharmaLogo';
 
 export default function Sidebar() {
     const pathname = usePathname();
-    const { user, profile } = useAuth();
+    const { profile } = useAuth();
 
-    // Helper to determine active state
-    const isActive = (path: string) => pathname === path || (path !== '/dashboard' && pathname.startsWith(path));
+    const isActive = (path: string) =>
+        pathname === path || (path !== '/dashboard' && pathname.startsWith(path));
+
+    // Calculate XP progress within current level (1000 XP per level)
+    const currentXP = profile?.xp || 0;
+    const xpInLevel = currentXP % 1000;
+    const xpPercent = (xpInLevel / 1000) * 100;
+
+    const activeQuests = (profile?.dailyQuests || []).filter(q => !q.completed).length;
+    const totalQuests = (profile?.dailyQuests || []).length;
+
+    const navItems = [
+        { href: '/dashboard', icon: '📊', label: 'Dashboard' },
+        { href: '/dashboard/builder', icon: '🧬', label: 'Molecule Builder' },
+        { href: '/dashboard/clinical-trials', icon: '🧪', label: 'Clinical Trials' },
+        { href: '/dashboard/quiz', icon: '🎓', label: 'Learning Quizzes' },
+        { divider: true },
+        { href: '/dashboard/leaderboard', icon: '🏆', label: 'Leaderboard' },
+        { href: '/dashboard/rewards', icon: '🪙', label: 'Rewards' },
+    ];
 
     return (
         <aside className={styles.sidebar}>
-            <div className={styles.profile}>
-                <div className={styles.avatar}>
-                    {profile?.displayName?.[0]?.toUpperCase() || 'D'}
-                </div>
-                <div className={styles.userInfo}>
-                    <div className={styles.userName}>
-                        {profile?.displayName || 'Researcher'}
-                    </div>
-                    <div className={styles.userRole}>Senior Biochemist • Lvl {profile?.level || 1}</div>
-                </div>
+            {/* Brand */}
+            <div className={styles.brand}>
+                <PharmaLogo size={32} showText={false} />
+                <span className={styles.brandName}>PharmaSim</span>
+                <span className={styles.brandTag}>Beta</span>
             </div>
 
+            {/* Profile Card */}
+            <div className={styles.profile}>
+                <Link href="/dashboard/settings" style={{ textDecoration: 'none' }}>
+                    <div className={styles.profileCard}>
+                        <div className={styles.avatarWrapper}>
+                            <div className={styles.avatar}>
+                                {profile?.displayName?.[0]?.toUpperCase() || 'R'}
+                            </div>
+                            <div className={styles.statusDot} />
+                            <div className={styles.levelBadge}>{profile?.level || 1}</div>
+                        </div>
+                        <div className={styles.userInfo}>
+                            <div className={styles.userName}>
+                                {profile?.displayName || 'Researcher'}
+                            </div>
+                            <div className={styles.userRole}>Senior Biochemist</div>
+                            <div className={styles.xpBar}>
+                                <div
+                                    className={styles.xpFill}
+                                    style={{ width: `${xpPercent}%` }}
+                                />
+                            </div>
+                            <div className={styles.xpText}>
+                                {xpInLevel} / 1,000 XP
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+            </div>
+
+            {/* Section Label */}
+            <div className={styles.sectionLabel}>Navigation</div>
+
+            {/* Navigation */}
             <nav className={styles.nav}>
-                <Link href="/dashboard" className={`${styles.navItem} ${pathname === '/dashboard' ? styles.active : ''}`}>
-                    <span>📊</span> Dashboard
-                </Link>
-                <Link href="/dashboard/builder" className={`${styles.navItem} ${isActive('/dashboard/builder') ? styles.active : ''}`}>
-                    <span>🧬</span> Molecule Builder
-                </Link>
-                <Link href="/dashboard/clinical-trials" className={`${styles.navItem} ${isActive('/dashboard/clinical-trials') ? styles.active : ''}`}>
-                    <span>🧪</span> Clinical Trials
-                </Link>
-                <Link href="/dashboard/quiz" className={`${styles.navItem} ${isActive('/dashboard/quiz') ? styles.active : ''}`}>
-                    <span>🎓</span> Learning Quizzes
-                </Link>
-                <Link href="/dashboard/leaderboard" className={`${styles.navItem} ${isActive('/dashboard/leaderboard') ? styles.active : ''}`}>
-                    <span>🏆</span> Global Leaderboard
-                </Link>
-                <Link href="/dashboard/archive" className={`${styles.navItem} ${isActive('/dashboard/archive') ? styles.active : ''}`}>
-                    <span>🗃️</span> Archive Lab
-                </Link>
+                {navItems.map((item, i) => {
+                    if ('divider' in item && item.divider) {
+                        return <div key={`div-${i}`} className={styles.navDivider} />;
+                    }
+                    if (!item.href) return null;
+                    return (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`${styles.navItem} ${item.href === '/dashboard'
+                                ? pathname === '/dashboard' ? styles.active : ''
+                                : isActive(item.href) ? styles.active : ''
+                                }`}
+                        >
+                            <div className={styles.navIcon}>
+                                <span>{item.icon}</span>
+                            </div>
+                            {item.label}
+                        </Link>
+                    );
+                })}
             </nav>
 
+            {/* Daily Quests */}
             <div className={styles.quests}>
-                <div className={styles.questTitle}>Daily Quests</div>
+                <div className={styles.questHeader}>
+                    <div className={styles.questTitle}>
+                        <span className={styles.questTitleIcon}>⚡</span>
+                        Daily Quests
+                    </div>
+                    <div className={styles.questBadge}>
+                        {activeQuests}/{totalQuests}
+                    </div>
+                </div>
 
-                {(profile?.dailyQuests || []).length === 0 ? (
-                    <div style={{ padding: '0 24px', fontSize: '0.8rem', color: '#6b7280' }}>All quests complete!</div>
+                {totalQuests === 0 ? (
+                    <div className={styles.emptyQuest}>No quests today</div>
                 ) : (
                     (profile?.dailyQuests || []).map(quest => (
                         <div key={quest.id} className={styles.questItem}>
                             <div className={styles.questName}>
                                 <span>{quest.title}</span>
                                 {quest.completed ? (
-                                    <span style={{ color: '#10b981' }}>Complete</span>
+                                    <span className={styles.questComplete}>
+                                        ✓ Done
+                                    </span>
                                 ) : (
-                                    <span>{quest.progress}/{quest.total}</span>
+                                    <span className={styles.questProgress}>
+                                        {quest.progress}/{quest.total}
+                                    </span>
                                 )}
                             </div>
                             <div className={styles.progressBar}>
                                 <div
                                     className={`${styles.progressFill} ${quest.completed ? styles.complete : ''}`}
-                                    style={{ width: `${(quest.progress / quest.total) * 100}%` }}
+                                    style={{ width: `${Math.min((quest.progress / quest.total) * 100, 100)}%` }}
                                 />
                             </div>
                         </div>
@@ -76,12 +140,18 @@ export default function Sidebar() {
                 )}
             </div>
 
+            {/* Footer */}
             <div className={styles.footer}>
                 <Link href="/dashboard/settings" className={styles.footerLink}>
-                    <span>⚙️</span> Settings
+                    <div className={styles.footerIcon}>⚙️</div>
+                    Settings
                 </Link>
-                <div className={`${styles.footerLink}`} onClick={() => auth.signOut()}>
-                    <span>🚪</span> Logout
+                <div
+                    className={`${styles.footerLink} ${styles.footerLinkDanger}`}
+                    onClick={() => auth.signOut()}
+                >
+                    <div className={styles.footerIcon}>🚪</div>
+                    Logout
                 </div>
             </div>
         </aside>

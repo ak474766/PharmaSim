@@ -21,7 +21,7 @@ const FUNCTIONAL_GROUPS_DATA = [
         description: 'An oxygen atom bonded to a hydrogen. Found in alcohols and phenols.',
         drugRelevance: 'Increases water solubility (hydrophilicity), enables hydrogen bonding for receptor binding.',
         examples: ['Ethanol (CCO)', 'Phenol (Oc1ccccc1)'],
-        color: '#60a5fa'
+        color: '#4DD0E1'
     },
     {
         name: 'Carbonyl (C=O)',
@@ -48,7 +48,7 @@ const FUNCTIONAL_GROUPS_DATA = [
         description: 'A nitrogen atom with hydrogen(s) attached. Can be primary, secondary, or tertiary.',
         drugRelevance: 'Basic (pKa ~9-11), protonated at physiological pH, hydrogen bond donor.',
         examples: ['Methylamine (CN)', 'Aniline (Nc1ccccc1)'],
-        color: '#3b82f6'
+        color: '#00ACC1'
     },
     {
         name: 'Amide (-CONH₂)',
@@ -57,7 +57,7 @@ const FUNCTIONAL_GROUPS_DATA = [
         description: 'A carbonyl attached to a nitrogen. The peptide bond is an amide.',
         drugRelevance: 'Very stable, resistant to metabolism, mimics peptide bonds in proteins.',
         examples: ['Acetamide (CC(=O)N)', 'Paracetamol (CC(=O)Nc1ccc(O)cc1)'],
-        color: '#8b5cf6'
+        color: '#4DD0E1'
     },
     {
         name: 'Ether (C-O-C)',
@@ -66,7 +66,7 @@ const FUNCTIONAL_GROUPS_DATA = [
         description: 'An oxygen between two carbon groups. Generally stable and non-reactive.',
         drugRelevance: 'Increases lipophilicity, good for crossing cell membranes.',
         examples: ['Diethyl Ether (CCOCC)', 'Anisole (COc1ccccc1)'],
-        color: '#06b6d4'
+        color: '#80DEEA'
     },
     {
         name: 'Ester (-COO-)',
@@ -102,7 +102,7 @@ const FUNCTIONAL_GROUPS_DATA = [
         description: 'A planar ring of carbons with delocalized π electrons. Benzene is the prototype.',
         drugRelevance: 'Flat, hydrophobic, can stack with other aromatics (π-π stacking).',
         examples: ['Benzene (c1ccccc1)', 'Naphthalene (c1ccc2ccccc2c1)'],
-        color: '#a78bfa'
+        color: '#80DEEA'
     }
 ];
 
