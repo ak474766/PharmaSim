@@ -1,0 +1,219 @@
+/* [project]/src/app/dashboard/quiz/Quiz.module.css [app-client] (css) */
+.Quiz-module__LhNxKG__container {
+  color: #fff;
+  background: #050505;
+  flex-direction: column;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+.Quiz-module__LhNxKG__content {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  display: flex;
+}
+
+.Quiz-module__LhNxKG__sectionTitle {
+  text-align: center;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 40px;
+  font-size: .9rem;
+}
+
+.Quiz-module__LhNxKG__mapContainer {
+  width: 100%;
+  max-width: 800px;
+}
+
+.Quiz-module__LhNxKG__nodeGrid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  justify-items: center;
+  gap: 40px;
+  display: grid;
+}
+
+.Quiz-module__LhNxKG__nodeCard {
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  transition: transform .2s;
+  display: flex;
+}
+
+.Quiz-module__LhNxKG__nodeCard:hover {
+  transform: scale(1.1);
+}
+
+.Quiz-module__LhNxKG__nodeIcon {
+  color: #fff;
+  background: #1f2937;
+  border: 2px solid #374151;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  transition: all .3s;
+  display: flex;
+}
+
+.Quiz-module__LhNxKG__nodeLabel {
+  color: #e5e7eb;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.Quiz-module__LhNxKG__nodeLevel {
+  color: #9ca3af;
+  font-size: .8rem;
+}
+
+.Quiz-module__LhNxKG__quizCard, .Quiz-module__LhNxKG__resultCard {
+  background: #111827;
+  border: 1px solid #ffffff1a;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 700px;
+  padding: 40px;
+  animation: .3s Quiz-module__LhNxKG__slideUp;
+  box-shadow: 0 20px 50px #00000080;
+}
+
+@keyframes Quiz-module__LhNxKG__slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.Quiz-module__LhNxKG__quizHeader {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  display: flex;
+}
+
+.Quiz-module__LhNxKG__topicBadge {
+  color: #60a5fa;
+  background: #3b82f633;
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.Quiz-module__LhNxKG__timer {
+  font-family: monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.Quiz-module__LhNxKG__questionText {
+  color: #fff;
+  margin-bottom: 40px;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.Quiz-module__LhNxKG__optionsGrid {
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+  display: grid;
+}
+
+.Quiz-module__LhNxKG__optionBtn {
+  color: #d1d5db;
+  cursor: pointer;
+  text-align: left;
+  background: #ffffff0d;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 1rem;
+  transition: all .2s;
+}
+
+.Quiz-module__LhNxKG__optionBtn:hover:not(:disabled) {
+  background: #ffffff1a;
+  border-color: #60a5fa;
+}
+
+.Quiz-module__LhNxKG__correct {
+  color: #fff !important;
+  background: #10b98133 !important;
+  border-color: #10b981 !important;
+}
+
+.Quiz-module__LhNxKG__dim {
+  opacity: .5;
+}
+
+.Quiz-module__LhNxKG__feedback {
+  text-align: center;
+  border-radius: 8px;
+  padding: 16px;
+  font-weight: 600;
+}
+
+.Quiz-module__LhNxKG__feedCorrect {
+  color: #10b981;
+  background: #10b9811a;
+}
+
+.Quiz-module__LhNxKG__feedWrong {
+  color: #ef4444;
+  background: #ef44441a;
+}
+
+.Quiz-module__LhNxKG__resultCard {
+  text-align: center;
+}
+
+.Quiz-module__LhNxKG__resultCard h2 {
+  margin-bottom: 16px;
+  font-size: 2rem;
+}
+
+.Quiz-module__LhNxKG__resultCard p {
+  color: #9ca3af;
+  margin-bottom: 32px;
+}
+
+.Quiz-module__LhNxKG__newLevel {
+  color: #3b82f6;
+  text-shadow: 0 0 20px #3b82f680;
+  margin-bottom: 40px;
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.Quiz-module__LhNxKG__btnPrimary {
+  color: #000;
+  cursor: pointer;
+  background: #fff;
+  border: none;
+  border-radius: 99px;
+  padding: 12px 32px;
+  font-weight: 700;
+  transition: transform .2s;
+}
+
+.Quiz-module__LhNxKG__btnPrimary:hover {
+  transform: scale(1.05);
+}
+
+/*# sourceMappingURL=src_app_dashboard_quiz_Quiz_module_css_bad6b30c._.single.css.map*/

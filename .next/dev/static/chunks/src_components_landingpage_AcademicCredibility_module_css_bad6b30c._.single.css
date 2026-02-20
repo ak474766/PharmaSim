@@ -1,0 +1,68 @@
+/* [project]/src/components/landingpage/AcademicCredibility.module.css [app-client] (css) */
+.AcademicCredibility-module__HW1Ala__section {
+  background: var(--bg-primary);
+  border-top: 1px solid #ffffff0d;
+  border-bottom: 1px solid #ffffff0d;
+  justify-content: center;
+  padding: 120px 20px;
+  display: flex;
+}
+
+.AcademicCredibility-module__HW1Ala__container {
+  text-align: center;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.AcademicCredibility-module__HW1Ala__label {
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: var(--text-secondary);
+  margin-bottom: 60px;
+  font-size: .8rem;
+}
+
+.AcademicCredibility-module__HW1Ala__grid {
+  opacity: .7;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 100px;
+  display: flex;
+}
+
+.AcademicCredibility-module__HW1Ala__partner {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.AcademicCredibility-module__HW1Ala__statRow {
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 40px;
+  display: flex;
+}
+
+.AcademicCredibility-module__HW1Ala__stat {
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.AcademicCredibility-module__HW1Ala__val {
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(#fff, #aaa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  margin-bottom: 10px;
+  font-size: 4rem;
+  font-weight: 700;
+}
+
+.AcademicCredibility-module__HW1Ala__key {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+/*# sourceMappingURL=src_components_landingpage_AcademicCredibility_module_css_bad6b30c._.single.css.map*/

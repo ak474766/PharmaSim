@@ -59,6 +59,13 @@ export interface TrialSubmission {
         safety: number;
         stability: number;
     };
+    chemicalStats?: {
+        formula: string;
+        molecularWeight: number;
+        functionalGroups: string[];
+        bonds?: { single: number; double: number; triple: number; aromatic: number };
+        warnings: string[];
+    };
     aiAnalysis?: string;
     imageUrl?: string;
     generatedImageUrl?: string;

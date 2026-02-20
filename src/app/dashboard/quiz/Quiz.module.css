@@ -107,8 +107,8 @@
 }
 
 .topicBadge {
-    background: rgba(59, 130, 246, 0.2);
-    color: #60a5fa;
+    background: rgba(0, 172, 193, 0.2);
+    color: #4DD0E1;
     padding: 4px 12px;
     border-radius: 4px;
     font-size: 0.8rem;
@@ -149,12 +149,12 @@
 
 .optionBtn:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.1);
-    border-color: #60a5fa;
+    border-color: #4DD0E1;
 }
 
 .correct {
-    background: rgba(16, 185, 129, 0.2) !important;
-    border-color: #10b981 !important;
+    background: rgba(0, 172, 193, 0.2) !important;
+    border-color: #00ACC1 !important;
     color: #fff !important;
 }
 
@@ -170,8 +170,8 @@
 }
 
 .feedCorrect {
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
+    background: rgba(0, 172, 193, 0.1);
+    color: #00ACC1;
 }
 
 .feedWrong {
@@ -196,9 +196,9 @@
 .newLevel {
     font-size: 3rem;
     font-weight: 800;
-    color: #3b82f6;
+    color: #00ACC1;
     margin-bottom: 40px;
-    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    text-shadow: 0 0 20px rgba(0, 172, 193, 0.5);
 }
 
 .btnPrimary {

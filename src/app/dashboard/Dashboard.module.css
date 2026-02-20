@@ -3,7 +3,6 @@
     flex-direction: column;
     height: 100%;
     width: 100%;
-    /* Sidebar is handled by layout, main content is strictly the scroll area */
 }
 
 .scrollArea {
@@ -24,7 +23,7 @@
     background: #151921;
     padding: 24px;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 172, 193, 0.08);
     position: relative;
     overflow: hidden;
 }
@@ -47,20 +46,20 @@
 
 .statChange {
     font-size: 0.85rem;
-    color: #10b981;
+    color: #4DD0E1;
     font-weight: 500;
 }
 
 .iconBlue {
-    color: #3b82f6;
+    color: #00ACC1;
 }
 
 .iconPurple {
-    color: #8b5cf6;
+    color: #4DD0E1;
 }
 
 .iconCyan {
-    color: #06b6d4;
+    color: #80DEEA;
 }
 
 .progressBar {
@@ -73,7 +72,7 @@
 
 .progressFill {
     height: 100%;
-    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    background: linear-gradient(90deg, #00ACC1, #4DD0E1);
     border-radius: 3px;
 }
 
@@ -106,7 +105,7 @@
     background: #151921;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 172, 193, 0.06);
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex;
     flex-direction: column;
@@ -114,8 +113,8 @@
 
 .moduleCard:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 172, 193, 0.15);
+    border-color: rgba(0, 172, 193, 0.2);
 }
 
 .cardBg {
@@ -123,19 +122,18 @@
     width: 100%;
     background-size: cover;
     background-position: center;
-    /* In real app, use images. Gradients for now */
 }
 
 .bgBuilder {
-    background: linear-gradient(135deg, #1e3a8a, #0f172a);
+    background: linear-gradient(135deg, #00838F, #004D40);
 }
 
 .bgTrials {
-    background: linear-gradient(135deg, #0e7490, #164e63);
+    background: linear-gradient(135deg, #00ACC1, #00838F);
 }
 
 .bgQuiz {
-    background: linear-gradient(135deg, #065f46, #064e3b);
+    background: linear-gradient(135deg, #4DD0E1, #00ACC1);
 }
 
 .cardContent {
@@ -158,18 +156,18 @@
 }
 
 .tagAdvanced {
-    background: rgba(59, 130, 246, 0.1);
-    color: #60a5fa;
+    background: rgba(0, 172, 193, 0.1);
+    color: #4DD0E1;
 }
 
 .tagSim {
-    background: rgba(16, 185, 129, 0.1);
-    color: #34d399;
+    background: rgba(77, 208, 225, 0.1);
+    color: #80DEEA;
 }
 
 .tagTraining {
-    background: rgba(139, 92, 246, 0.1);
-    color: #a78bfa;
+    background: rgba(128, 222, 234, 0.1);
+    color: #B2EBF2;
 }
 
 .cardTime {
@@ -177,7 +175,6 @@
     color: #6b7280;
     float: right;
     margin-top: -30px;
-    /* Hacky alignment per wireframe visual */
 }
 
 .cardTitle {
@@ -195,21 +192,22 @@
 }
 
 .btnEnter {
-    background: #1f2937;
+    background: linear-gradient(135deg, #00ACC1, #00838F);
     color: #fff;
     text-align: center;
     padding: 12px;
     border-radius: 8px;
     font-weight: 600;
     text-decoration: none;
-    transition: background 0.2s;
+    transition: all 0.2s;
     border: none;
     display: block;
     width: 100%;
 }
 
 .btnEnter:hover {
-    background: #374151;
+    background: linear-gradient(135deg, #4DD0E1, #00ACC1);
+    box-shadow: 0 4px 15px rgba(0, 172, 193, 0.3);
 }
 
 /* Achievements */
@@ -217,7 +215,7 @@
     background: #151921;
     border-radius: 16px;
     padding: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 172, 193, 0.06);
 }
 
 .achievementsTitle {
@@ -230,20 +228,20 @@
     align-items: center;
     gap: 16px;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(0, 172, 193, 0.03);
     border-radius: 8px;
 }
 
 .achievementIcon {
     width: 40px;
     height: 40px;
-    background: rgba(251, 191, 36, 0.2);
+    background: rgba(0, 172, 193, 0.15);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
-    color: #fbbf24;
+    color: #4DD0E1;
 }
 
 .achievementName {

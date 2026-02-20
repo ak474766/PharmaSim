@@ -5,12 +5,15 @@ import View3D from './View3D';
 import { Atom, Bond, PeriodicTable } from '@/lib/chemistry';
 import { SYLLABUS_DATA, SyllabusLevel } from '@/lib/syllabusData';
 import { AiService } from '@/lib/aiService';
+import { MoleculeAnalysisResult } from '@/app/actions/ai';
 import * as THREE from 'three';
-import { validateMolecule } from '@/lib/validation';
+import { validateMolecule, ValidationResult } from '@/lib/validation';
+import { parseSmiles, SMILES_EXAMPLES } from '@/lib/smilesParser';
 import styles from './Builder.module.css';
 import { useAuth } from '@/context/AuthContext';
 import { UserService } from '@/lib/userService';
 import MissionSelector from './MissionSelector';
+import ChemistryReference from './ChemistryReference';
 import { useRouter } from 'next/navigation';
 import { TrialService } from '@/lib/trialService';
 import { ImageService } from '@/lib/imageService';
@@ -35,10 +38,18 @@ export default function Builder() {
 
     // --- Syllabus & AI State ---
     const [currentMission, setCurrentMission] = useState<SyllabusLevel>(SYLLABUS_DATA[0]);
-    const [aiFeedback, setAiFeedback] = useState<{ analysis: string; efficacy: number; safety: number; feedback: string } | null>(null);
+    const [aiFeedback, setAiFeedback] = useState<MoleculeAnalysisResult | null>(null);
     const [analyzing, setAnalyzing] = useState(false);
-    const [validationResult, setValidationResult] = useState<{ valid: boolean; errors: string[]; name?: string } | null>(null);
+    const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
     const [missionLoaded, setMissionLoaded] = useState(false);
+
+    // --- SMILES Input State ---
+    const [smilesInput, setSmilesInput] = useState('');
+    const [showSmilesInput, setShowSmilesInput] = useState(false);
+    const [smilesError, setSmilesError] = useState<string | null>(null);
+
+    // --- Chemistry Reference State ---
+    const [showReference, setShowReference] = useState(false);
 
     // Helper: Load a mission template
     const loadMission = useCallback((mission: SyllabusLevel) => {
@@ -233,6 +244,9 @@ export default function Builder() {
             await UserService.addXP(user.uid, xpAwarded);
             await UserService.updateQuestProgress(user.uid, 'build_molecule', 1);
 
+            // Calculate validation result for submission details
+            const validationResult = validateMolecule(atoms, bonds);
+
             // Save trial data for the Clinical Trials phase using TrialService (Firebase)
             const submission = await TrialService.saveSubmission(user.uid, {
                 moleculeName: currentMission.moleculeTemplate.name + " (Modified)",
@@ -244,6 +258,18 @@ export default function Builder() {
                     safety: aiFeedback?.safety || (properties.toxicity === 'Low' ? 80 : 40),
                     stability: properties.stability
                 },
+                chemicalStats: {
+                    formula: validationResult.formula || 'Unknown',
+                    molecularWeight: validationResult.molecularWeight || 0,
+                    functionalGroups: validationResult.functionalGroups || [],
+                    bonds: {
+                        single: bonds.filter(b => b.order === 1).length,
+                        double: bonds.filter(b => b.order === 2).length,
+                        triple: bonds.filter(b => b.order === 3).length,
+                        aromatic: validationResult.rings?.filter(r => r.isAromatic).length || 0
+                    },
+                    warnings: validationResult.warnings || []
+                },
                 aiAnalysis: aiFeedback?.analysis,
                 imageUrl: AiService.generateMoleculeImageUrl(currentMission.moleculeTemplate.name)
             });
@@ -254,7 +280,8 @@ export default function Builder() {
                 currentMission.moleculeTemplate.name,
                 submission.id,
                 aiFeedback?.efficacy || properties.efficacy,
-                aiFeedback?.safety || 50
+                aiFeedback?.safety || 50,
+                aiFeedback?.visualPrompt
             );
 
             // Update trial with generated image URL
@@ -289,6 +316,47 @@ export default function Builder() {
             setMessage('Error submitting design');
         } finally {
             setSubmitting(false);
+        }
+    };
+
+    // --- SMILES Parsing Handler ---
+    const handleSmilesLoad = () => {
+        if (!smilesInput.trim()) {
+            setSmilesError('Please enter a SMILES string');
+            return;
+        }
+
+        const result = parseSmiles(smilesInput.trim());
+
+        if (!result.success) {
+            setSmilesError(result.error || 'Failed to parse SMILES');
+            return;
+        }
+
+        // Successfully parsed - load into builder
+        setAtoms(result.atoms);
+        setBonds(result.bonds);
+        setSmilesError(null);
+        setShowSmilesInput(false);
+        setSmilesInput('');
+        setAiFeedback(null);
+        updateProperties(result.atoms, result.bonds);
+        setMessage(`Loaded molecule from SMILES: ${smilesInput.trim()}`);
+    };
+
+    const handleSmilesExample = (smiles: string, name: string) => {
+        const result = parseSmiles(smiles);
+
+        if (result.success) {
+            setAtoms(result.atoms);
+            setBonds(result.bonds);
+            setSmilesError(null);
+            setShowSmilesInput(false);
+            setAiFeedback(null);
+            updateProperties(result.atoms, result.bonds);
+            setMessage(`Loaded ${name} from SMILES`);
+        } else {
+            setSmilesError(result.error || 'Failed to parse example');
         }
     };
 
@@ -363,8 +431,95 @@ export default function Builder() {
                         </button>
                     </div>
                     <button className={styles.btn} onClick={handleReset}>↺ Reset Template</button>
+
+                    {/* SMILES Input Toggle */}
+                    <button
+                        className={`${styles.btn} ${showSmilesInput ? styles.active : ''}`}
+                        onClick={() => setShowSmilesInput(!showSmilesInput)}
+                        style={{ background: showSmilesInput ? '#0ea5e9' : undefined }}
+                    >
+                        📝 SMILES Input
+                    </button>
+
+                    {/* SMILES Input Panel */}
+                    {showSmilesInput && (
+                        <div style={{
+                            background: 'rgba(15, 23, 42, 0.9)',
+                            border: '1px solid rgba(14, 165, 233, 0.4)',
+                            borderRadius: '10px',
+                            padding: '12px',
+                            marginTop: '4px'
+                        }}>
+                            <div style={{ marginBottom: '8px', fontSize: '0.75rem', color: '#94a3b8' }}>
+                                Enter SMILES notation:
+                            </div>
+                            <input
+                                type="text"
+                                value={smilesInput}
+                                onChange={(e) => { setSmilesInput(e.target.value); setSmilesError(null); }}
+                                placeholder="e.g., CCO (ethanol)"
+                                style={{
+                                    width: '100%',
+                                    padding: '10px 12px',
+                                    background: 'rgba(30, 41, 59, 0.8)',
+                                    border: smilesError ? '1px solid #ef4444' : '1px solid rgba(148, 163, 184, 0.3)',
+                                    borderRadius: '8px',
+                                    color: '#e2e8f0',
+                                    fontSize: '0.9rem',
+                                    fontFamily: 'monospace',
+                                    marginBottom: '8px'
+                                }}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSmilesLoad()}
+                            />
+                            {smilesError && (
+                                <div style={{ color: '#ef4444', fontSize: '0.75rem', marginBottom: '8px' }}>
+                                    ⚠️ {smilesError}
+                                </div>
+                            )}
+                            <button
+                                className={`${styles.btn}`}
+                                onClick={handleSmilesLoad}
+                                style={{ width: '100%', marginBottom: '8px', background: '#0ea5e9' }}
+                            >
+                                🧬 Generate Structure
+                            </button>
+
+                            {/* Quick Examples */}
+                            <div style={{ fontSize: '0.7rem', color: '#64748b', marginBottom: '6px' }}>Quick Examples:</div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                                {SMILES_EXAMPLES.slice(0, 8).map((ex) => (
+                                    <button
+                                        key={ex.name}
+                                        onClick={() => handleSmilesExample(ex.smiles, ex.name)}
+                                        style={{
+                                            padding: '4px 8px',
+                                            fontSize: '0.65rem',
+                                            background: 'rgba(59, 130, 246, 0.2)',
+                                            border: '1px solid rgba(59, 130, 246, 0.3)',
+                                            borderRadius: '4px',
+                                            color: '#60a5fa',
+                                            cursor: 'pointer'
+                                        }}
+                                        title={ex.smiles}
+                                    >
+                                        {ex.name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
                     <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleAIAnalysis} disabled={analyzing}>
                         {analyzing ? '🤖 Analyzing...' : '🧠 AI Analysis'}
+                    </button>
+
+                    {/* Chemistry Reference Button */}
+                    <button
+                        className={styles.btn}
+                        onClick={() => setShowReference(true)}
+                        style={{ background: 'rgba(139, 92, 246, 0.3)', borderColor: '#8b5cf6' }}
+                    >
+                        📚 Chemistry Reference
                     </button>
                 </div>
 
@@ -391,7 +546,7 @@ export default function Builder() {
 
             <div className={styles.canvasArea}>
                 <div className={styles.canvasHeader}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                         <div className={styles.statusMsg}>{message}</div>
                         {validationResult && (
                             <div style={{
@@ -406,14 +561,33 @@ export default function Builder() {
                                 border: `1px solid ${validationResult.valid ? '#10b981' : '#ef4444'}`,
                                 color: validationResult.valid ? '#10b981' : '#ef4444'
                             }}>
-                                {validationResult.valid ? '✓ Valid Compound' : '✗ Invalid Bonds'}
-                                {validationResult.valid && validationResult.name && (
+                                {validationResult.valid ? '✓ Valid' : '✗ Invalid'}
+                                {validationResult.name && (
                                     <span style={{ color: '#60a5fa', marginLeft: '4px' }}>• {validationResult.name}</span>
                                 )}
                             </div>
                         )}
+                        {/* Formula & MW Badge */}
+                        {validationResult?.formula && (
+                            <div style={{
+                                padding: '4px 10px',
+                                borderRadius: '6px',
+                                fontSize: '0.75rem',
+                                fontWeight: 600,
+                                background: 'rgba(96, 165, 250, 0.15)',
+                                border: '1px solid rgba(96, 165, 250, 0.4)',
+                                color: '#60a5fa'
+                            }}>
+                                {validationResult.formula} • {validationResult.molecularWeight} g/mol
+                            </div>
+                        )}
                     </div>
                     <div className={styles.propTags}>
+                        {validationResult?.properties?.complexity !== undefined && (
+                            <span className={styles.tag} style={{ color: '#a78bfa' }}>
+                                Complexity: {validationResult.properties.complexity}%
+                            </span>
+                        )}
                         <span className={styles.tag}>Stab: {Math.round(properties.stability)}%</span>
                         <span className={styles.tag}>Eff: {Math.round(properties.efficacy)}%</span>
                         <span className={styles.tag} style={{ color: properties.toxicity === 'Low' ? '#10b981' : '#ef4444' }}>
@@ -422,27 +596,75 @@ export default function Builder() {
                     </div>
                 </div>
 
-                {/* Validation Errors Panel */}
-                {validationResult && !validationResult.valid && validationResult.errors.length > 0 && (
+                {/* Functional Groups Panel (Top Right) */}
+                {validationResult?.functionalGroups && validationResult.functionalGroups.length > 0 && (
+                    <div style={{
+                        position: 'absolute',
+                        top: '60px',
+                        right: '16px',
+                        background: 'rgba(30, 41, 59, 0.95)',
+                        border: '1px solid rgba(148, 163, 184, 0.2)',
+                        borderRadius: '10px',
+                        padding: '12px',
+                        zIndex: 10,
+                        maxWidth: '220px',
+                        fontSize: '0.75rem',
+                        backdropFilter: 'blur(8px)'
+                    }}>
+                        <div style={{ fontWeight: 700, marginBottom: '8px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            Functional Groups
+                        </div>
+                        {validationResult.functionalGroups.map((fg, i) => (
+                            <div key={i} style={{ marginBottom: '4px', color: '#e2e8f0' }}>{fg}</div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Validation Info Panel (Bottom Left) */}
+                {validationResult && (validationResult.errors.length > 0 || validationResult.warnings.length > 0) && (
                     <div style={{
                         position: 'absolute',
                         bottom: '16px',
                         left: '16px',
-                        background: 'rgba(239, 68, 68, 0.15)',
-                        border: '1px solid rgba(239, 68, 68, 0.4)',
-                        borderRadius: '8px',
+                        background: validationResult.valid
+                            ? 'rgba(30, 58, 95, 0.95)'
+                            : 'rgba(127, 29, 29, 0.9)',
+                        border: `1px solid ${validationResult.valid ? 'rgba(96, 165, 250, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
+                        borderRadius: '10px',
                         padding: '12px',
                         zIndex: 10,
-                        maxWidth: '350px',
+                        maxWidth: '380px',
                         fontSize: '0.75rem',
-                        color: '#fca5a5'
+                        backdropFilter: 'blur(8px)'
                     }}>
-                        <div style={{ fontWeight: 700, marginBottom: '6px', color: '#ef4444' }}>⚠️ Valence Issues:</div>
-                        {validationResult.errors.slice(0, 3).map((err, i) => (
-                            <div key={i} style={{ marginBottom: '2px' }}>• {err}</div>
-                        ))}
-                        {validationResult.errors.length > 3 && (
-                            <div style={{ color: '#9ca3af', marginTop: '4px' }}>...and {validationResult.errors.length - 3} more</div>
+                        {/* Errors */}
+                        {!validationResult.valid && validationResult.errors.length > 0 && (
+                            <>
+                                <div style={{ fontWeight: 700, marginBottom: '6px', color: '#ef4444' }}>⚠️ Valence Issues:</div>
+                                {validationResult.errors.slice(0, 3).map((err, i) => (
+                                    <div key={`err-${i}`} style={{ marginBottom: '2px', color: '#fca5a5' }}>• {err}</div>
+                                ))}
+                                {validationResult.errors.length > 3 && (
+                                    <div style={{ color: '#9ca3af', marginTop: '4px' }}>...and {validationResult.errors.length - 3} more</div>
+                                )}
+                            </>
+                        )}
+
+                        {/* Warnings / Info */}
+                        {validationResult.warnings.length > 0 && (
+                            <div style={{ marginTop: validationResult.errors.length > 0 ? '10px' : '0' }}>
+                                {validationResult.warnings.slice(0, 4).map((warn, i) => (
+                                    <div key={`warn-${i}`} style={{
+                                        marginBottom: '4px',
+                                        color: warn.startsWith('✅') ? '#86efac' :
+                                            warn.startsWith('⚠️') ? '#fcd34d' :
+                                                warn.startsWith('💊') ? '#c4b5fd' :
+                                                    warn.startsWith('🔵') ? '#93c5fd' : '#e2e8f0'
+                                    }}>
+                                        {warn}
+                                    </div>
+                                ))}
+                            </div>
                         )}
                     </div>
                 )}
@@ -455,6 +677,12 @@ export default function Builder() {
                     onAtomClick={handleAtomClick}
                 />
             </div>
+
+            {/* Chemistry Reference Panel */}
+            <ChemistryReference
+                isOpen={showReference}
+                onClose={() => setShowReference(false)}
+            />
         </div>
     );
 }

@@ -79,6 +79,14 @@ export const UserService = {
         }
     },
 
+    async updateDisplayName(uid: string, displayName: string) {
+        const name = displayName.trim();
+        if (!name) throw new Error('Display name cannot be empty');
+        const docRef = doc(db, 'users', uid);
+        await updateDoc(docRef, { displayName: name });
+        return name;
+    },
+
     // Update Quest Progress
     async updateQuestProgress(uid: string, type: string, amount: number) {
         const docRef = doc(db, 'users', uid);

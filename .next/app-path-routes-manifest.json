@@ -1,0 +1,20 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/ai/analyze-molecule/route": "/api/ai/analyze-molecule",
+  "/api/ai/generate-question/route": "/api/ai/generate-question",
+  "/api/ai/scenario/route": "/api/ai/scenario",
+  "/api/ai/trial-event/route": "/api/ai/trial-event",
+  "/api/ai/trial-roadmap/route": "/api/ai/trial-roadmap",
+  "/dashboard/archive/page": "/dashboard/archive",
+  "/dashboard/builder/page": "/dashboard/builder",
+  "/dashboard/clinical-trials/page": "/dashboard/clinical-trials",
+  "/dashboard/leaderboard/page": "/dashboard/leaderboard",
+  "/dashboard/page": "/dashboard",
+  "/dashboard/quiz/page": "/dashboard/quiz",
+  "/dashboard/settings/page": "/dashboard/settings",
+  "/forgot-password/page": "/forgot-password",
+  "/login/page": "/login",
+  "/page": "/",
+  "/signup/page": "/signup"
+}

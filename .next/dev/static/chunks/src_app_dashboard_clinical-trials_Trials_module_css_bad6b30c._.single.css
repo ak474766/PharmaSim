@@ -1,0 +1,1239 @@
+/* [project]/src/app/dashboard/clinical-trials/Trials.module.css [app-client] (css) */
+.Trials-module__6vxRjW__container {
+  color: #fff;
+  background: #050505;
+  flex-direction: column;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+.Trials-module__6vxRjW__gameArea {
+  flex-direction: column;
+  flex: 1;
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 40px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__statsBar {
+  background: #1f2937;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  gap: 20px;
+  padding: 16px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__statItem {
+  flex: 1;
+}
+
+.Trials-module__6vxRjW__statLabel {
+  color: #9ca3af;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.Trials-module__6vxRjW__statValue {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.Trials-module__6vxRjW__statValueSm {
+  color: #fff;
+  text-align: right;
+  margin-top: 4px;
+  font-size: .9rem;
+}
+
+.Trials-module__6vxRjW__statBarContainer {
+  background: #ffffff1a;
+  border-radius: 4px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.Trials-module__6vxRjW__statBarFill {
+  height: 100%;
+  transition: width .3s;
+}
+
+.Trials-module__6vxRjW__mainStage {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__card {
+  text-align: center;
+  background: #111827;
+  border: 1px solid #ffffff1a;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  animation: .4s Trials-module__6vxRjW__fadeIn;
+  box-shadow: 0 10px 40px #00000080;
+}
+
+@keyframes Trials-module__6vxRjW__fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.Trials-module__6vxRjW__card h1 {
+  background: linear-gradient(90deg, #4dd0e1, #80deea);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  margin-bottom: 16px;
+  font-size: 2rem;
+}
+
+.Trials-module__6vxRjW__card h2 {
+  color: #fff;
+  margin-bottom: 12px;
+  font-size: 1.5rem;
+}
+
+.Trials-module__6vxRjW__card p {
+  color: #9ca3af;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.Trials-module__6vxRjW__phaseBadge {
+  color: #4dd0e1;
+  background: #00acc133;
+  border: 1px solid #00acc14d;
+  border-radius: 99px;
+  margin-bottom: 16px;
+  padding: 4px 12px;
+  font-size: .8rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.Trials-module__6vxRjW__choices {
+  flex-direction: column;
+  gap: 12px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__choiceBtn {
+  text-align: left;
+  cursor: pointer;
+  background: #ffffff0d;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all .2s;
+}
+
+.Trials-module__6vxRjW__choiceBtn:hover {
+  background: #ffffff1a;
+  border-color: #4dd0e1;
+  transform: translateX(4px);
+}
+
+.Trials-module__6vxRjW__choiceText {
+  color: #fff;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.Trials-module__6vxRjW__choiceEffect {
+  color: #9ca3af;
+  font-size: .8rem;
+}
+
+.Trials-module__6vxRjW__btnPrimary {
+  color: #fff;
+  cursor: pointer;
+  background: #00acc1;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background .2s;
+}
+
+.Trials-module__6vxRjW__btnPrimary:hover {
+  background: #00838f;
+}
+
+.Trials-module__6vxRjW__btnSecondary {
+  color: #fff;
+  cursor: pointer;
+  background: none;
+  border: 1px solid #fff3;
+  border-radius: 8px;
+  padding: 12px 32px;
+  transition: background .2s;
+}
+
+.Trials-module__6vxRjW__btnSecondary:hover {
+  background: #ffffff1a;
+}
+
+.Trials-module__6vxRjW__logConsole {
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 8px;
+  flex-direction: column;
+  height: 150px;
+  padding: 12px;
+  font-family: monospace;
+  display: flex;
+  overflow-y: auto;
+}
+
+.Trials-module__6vxRjW__logTitle {
+  color: #4ade80;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-size: .8rem;
+}
+
+.Trials-module__6vxRjW__logList {
+  flex-direction: column;
+  gap: 4px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__logItem {
+  color: #9ca3af;
+  font-size: .9rem;
+}
+
+.Trials-module__6vxRjW__victoryOverlay {
+  z-index: 100;
+  background: radial-gradient(#00acc126 0%, #050505f2 70%);
+  justify-content: center;
+  align-items: center;
+  animation: .6s ease-out Trials-module__6vxRjW__victoryFadeIn;
+  display: flex;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+@keyframes Trials-module__6vxRjW__victoryFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.Trials-module__6vxRjW__victoryParticles {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.Trials-module__6vxRjW__victoryParticle {
+  opacity: .8;
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  animation: linear infinite Trials-module__6vxRjW__particleFall;
+  position: absolute;
+}
+
+@keyframes Trials-module__6vxRjW__particleFall {
+  0% {
+    opacity: 1;
+    transform: translateY(-20px)rotate(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(100vh)rotate(720deg);
+  }
+}
+
+.Trials-module__6vxRjW__victoryCard {
+  text-align: center;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  background: linear-gradient(145deg, #111827f2, #052e1666);
+  border: 1px solid #00acc14d;
+  border-radius: 24px;
+  width: 90%;
+  max-width: 560px;
+  padding: 48px;
+  animation: .5s cubic-bezier(.34, 1.56, .64, 1) Trials-module__6vxRjW__victoryCardPop;
+  position: relative;
+  box-shadow: 0 0 80px #00acc126, 0 20px 60px #00000080;
+}
+
+@keyframes Trials-module__6vxRjW__victoryCardPop {
+  from {
+    opacity: 0;
+    transform: scale(.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.Trials-module__6vxRjW__victoryIcon {
+  margin-bottom: 8px;
+  font-size: 4rem;
+  animation: 2s infinite Trials-module__6vxRjW__victoryBounce;
+  display: block;
+}
+
+@keyframes Trials-module__6vxRjW__victoryBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.Trials-module__6vxRjW__victoryTitle {
+  background: linear-gradient(135deg, #00acc1, #4dd0e1, #80deea);
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -.5px;
+  -webkit-background-clip: text;
+  margin-bottom: 8px;
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+.Trials-module__6vxRjW__victorySubtitle {
+  color: #9ca3af;
+  margin-bottom: 32px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.Trials-module__6vxRjW__victoryStats {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+  display: grid;
+}
+
+.Trials-module__6vxRjW__victoryStat {
+  background: #ffffff0d;
+  border: 1px solid #ffffff14;
+  border-radius: 12px;
+  padding: 16px 8px;
+}
+
+.Trials-module__6vxRjW__victoryStatValue {
+  margin-bottom: 4px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  display: block;
+}
+
+.Trials-module__6vxRjW__victoryStatLabel {
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-size: .75rem;
+}
+
+.Trials-module__6vxRjW__xpBadge {
+  color: #fbbf24;
+  background: linear-gradient(135deg, #fbbf2426, #f59e0b1a);
+  border: 1px solid #fbbf244d;
+  border-radius: 99px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  padding: 10px 24px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  animation: 2s infinite Trials-module__6vxRjW__xpPulse;
+  display: inline-flex;
+}
+
+@keyframes Trials-module__6vxRjW__xpPulse {
+  0%, 100% {
+    box-shadow: 0 0 #fbbf2433;
+  }
+
+  50% {
+    box-shadow: 0 0 20px 4px #fbbf241a;
+  }
+}
+
+.Trials-module__6vxRjW__achievementUnlock {
+  background: #4dd0e11a;
+  border: 1px solid #4dd0e140;
+  border-radius: 12px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding: 14px 20px;
+  animation: .6s .3s both Trials-module__6vxRjW__achieveSlide;
+  display: flex;
+}
+
+@keyframes Trials-module__6vxRjW__achieveSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.Trials-module__6vxRjW__achieveIcon {
+  font-size: 1.8rem;
+}
+
+.Trials-module__6vxRjW__achieveInfo {
+  text-align: left;
+}
+
+.Trials-module__6vxRjW__achieveLabel {
+  color: #80deea;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: .7rem;
+}
+
+.Trials-module__6vxRjW__achieveTitle {
+  color: #e5e7eb;
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.Trials-module__6vxRjW__victoryActions {
+  justify-content: center;
+  gap: 12px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__btnVictory {
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, #00acc1, #00838f);
+  border: none;
+  border-radius: 12px;
+  padding: 14px 36px;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all .2s;
+  box-shadow: 0 4px 15px #00acc14d;
+}
+
+.Trials-module__6vxRjW__btnVictory:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px #00acc166;
+}
+
+.Trials-module__6vxRjW__gameoverOverlay {
+  z-index: 100;
+  background: radial-gradient(#ef44441a 0%, #050505f7 70%);
+  justify-content: center;
+  align-items: center;
+  animation: .8s ease-out Trials-module__6vxRjW__gameoverFadeIn;
+  display: flex;
+  position: fixed;
+  inset: 0;
+}
+
+@keyframes Trials-module__6vxRjW__gameoverFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.Trials-module__6vxRjW__gameoverCard {
+  text-align: center;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  background: linear-gradient(145deg, #111827f2, #320a0a4d);
+  border: 1px solid #ef444440;
+  border-radius: 24px;
+  width: 90%;
+  max-width: 520px;
+  padding: 48px;
+  animation: .6s Trials-module__6vxRjW__gameoverShake;
+  position: relative;
+  box-shadow: 0 0 60px #ef44441a, 0 20px 60px #00000080;
+}
+
+@keyframes Trials-module__6vxRjW__gameoverShake {
+  0% {
+    transform: scale(.9);
+  }
+
+  20% {
+    transform: scale(1.02)rotate(-1deg);
+  }
+
+  40% {
+    transform: scale(1)rotate(1deg);
+  }
+
+  60% {
+    transform: scale(1.01)rotate(-.5deg);
+  }
+
+  80% {
+    transform: scale(1)rotate(.5deg);
+  }
+
+  100% {
+    transform: scale(1)rotate(0);
+  }
+}
+
+.Trials-module__6vxRjW__gameoverIcon {
+  filter: grayscale(30%);
+  margin-bottom: 8px;
+  font-size: 4rem;
+  display: block;
+}
+
+.Trials-module__6vxRjW__gameoverTitle {
+  background: linear-gradient(135deg, #ef4444, #f87171);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  margin-bottom: 12px;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.Trials-module__6vxRjW__gameoverReason {
+  color: #fca5a5;
+  background: #ef444414;
+  border: 1px solid #ef444426;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  padding: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.Trials-module__6vxRjW__gameoverStats {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+  display: grid;
+}
+
+.Trials-module__6vxRjW__gameoverStat {
+  background: #ffffff08;
+  border: 1px solid #ffffff0f;
+  border-radius: 10px;
+  padding: 12px 8px;
+}
+
+.Trials-module__6vxRjW__gameoverStatValue {
+  margin-bottom: 2px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: block;
+}
+
+.Trials-module__6vxRjW__gameoverStatLabel {
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-size: .7rem;
+}
+
+.Trials-module__6vxRjW__gameoverTip {
+  color: #6b7280;
+  margin-bottom: 28px;
+  font-size: .85rem;
+  font-style: italic;
+}
+
+.Trials-module__6vxRjW__gameoverActions {
+  justify-content: center;
+  gap: 12px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__btnRetry {
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, #00acc1, #00838f);
+  border: none;
+  border-radius: 12px;
+  padding: 14px 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all .2s;
+  box-shadow: 0 4px 15px #00acc14d;
+}
+
+.Trials-module__6vxRjW__btnRetry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px #00acc166;
+}
+
+.Trials-module__6vxRjW__btnGhost {
+  color: #9ca3af;
+  cursor: pointer;
+  background: none;
+  border: 1px solid #ffffff26;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: .95rem;
+  font-weight: 600;
+  transition: all .2s;
+}
+
+.Trials-module__6vxRjW__btnGhost:hover {
+  color: #fff;
+  background: #ffffff0d;
+  border-color: #ffffff40;
+}
+
+.Trials-module__6vxRjW__trialCard {
+  cursor: pointer;
+  background: linear-gradient(145deg, #111827, #0d1117);
+  border: 1px solid #ffffff14;
+  border-radius: 16px;
+  transition: all .35s cubic-bezier(.4, 0, .2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.Trials-module__6vxRjW__trialCard:before {
+  content: "";
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(135deg, #0000 40%, #00acc108 100%);
+  transition: opacity .35s;
+  position: absolute;
+  inset: 0;
+}
+
+.Trials-module__6vxRjW__trialCard:hover:before {
+  opacity: 1;
+}
+
+.Trials-module__6vxRjW__trialImage {
+  justify-content: center;
+  align-items: center;
+  height: 160px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.Trials-module__6vxRjW__trialImage:after {
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(to top, #111827, #0000);
+  height: 50%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.Trials-module__6vxRjW__moleculeIcon {
+  opacity: .85;
+  filter: drop-shadow(0 0 20px #00acc14d);
+  font-size: 3.5rem;
+}
+
+.Trials-module__6vxRjW__trialInfo {
+  z-index: 2;
+  padding: 18px;
+  position: relative;
+}
+
+.Trials-module__6vxRjW__trialInfo h3 {
+  color: #f3f4f6;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-bottom: 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  overflow: hidden;
+}
+
+.Trials-module__6vxRjW__trialStats {
+  gap: 16px;
+  margin-bottom: 14px;
+  font-size: .82rem;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__trialStats span {
+  color: #4dd0e1;
+  background: #00acc114;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-weight: 600;
+}
+
+.Trials-module__6vxRjW__trialStatus {
+  border-radius: 99px;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: .75rem;
+  font-weight: 600;
+  display: inline-flex;
+}
+
+.Trials-module__6vxRjW__trialStatus.Trials-module__6vxRjW__pending {
+  color: #fbbf24;
+  background: #fbbf241a;
+  border: 1px solid #fbbf2426;
+}
+
+.Trials-module__6vxRjW__trialStatus.Trials-module__6vxRjW__in_progress {
+  color: #4dd0e1;
+  background: #00acc11a;
+  border: 1px solid #00acc126;
+}
+
+.Trials-module__6vxRjW__trialStatus.Trials-module__6vxRjW__completed {
+  color: #00acc1;
+  background: #00acc11a;
+  border: 1px solid #00acc126;
+}
+
+.Trials-module__6vxRjW__trialStatus.Trials-module__6vxRjW__failed {
+  color: #ef4444;
+  background: #ef44441a;
+  border: 1px solid #ef444426;
+}
+
+.Trials-module__6vxRjW__choiceBtn {
+  text-align: left;
+  cursor: pointer;
+  background: #ffffff08;
+  border: 1px solid #ffffff14;
+  border-radius: 14px;
+  padding: 18px;
+  transition: all .25s cubic-bezier(.4, 0, .2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.Trials-module__6vxRjW__choiceBtn:before {
+  content: "";
+  background: #00acc1;
+  width: 3px;
+  transition: transform .25s;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  transform: scaleY(0);
+}
+
+.Trials-module__6vxRjW__choiceBtn:hover:before {
+  transform: scaleY(1);
+}
+
+.Trials-module__6vxRjW__choiceBtn:hover {
+  background: #00acc10f;
+  border-color: #00acc14d;
+  transform: translateX(6px);
+  box-shadow: 0 4px 15px #00acc11a;
+}
+
+@keyframes Trials-module__6vxRjW__slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.Trials-module__6vxRjW__card {
+  text-align: center;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background: linear-gradient(145deg, #111827, #0f172a);
+  border: 1px solid #ffffff14;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 620px;
+  padding: 40px;
+  animation: .5s cubic-bezier(.4, 0, .2, 1) Trials-module__6vxRjW__slideUp;
+  box-shadow: 0 10px 40px #00000080, 0 0 0 1px #ffffff08;
+}
+
+.Trials-module__6vxRjW__winCard, .Trials-module__6vxRjW__lossCard {
+  display: none;
+}
+
+.Trials-module__6vxRjW__xpReward {
+  color: #fbbf24;
+  margin-bottom: 24px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.Trials-module__6vxRjW__statsBar {
+  background: linear-gradient(145deg, #1f2937, #111827);
+  border: 1px solid #ffffff0f;
+  border-radius: 14px;
+  gap: 20px;
+  padding: 18px;
+  display: flex;
+  box-shadow: 0 4px 20px #0000004d;
+}
+
+.Trials-module__6vxRjW__statBarFill {
+  border-radius: 4px;
+  height: 100%;
+  transition: width .5s cubic-bezier(.4, 0, .2, 1);
+}
+
+.Trials-module__6vxRjW__btnPrimary {
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, #00acc1, #00838f);
+  border: none;
+  border-radius: 10px;
+  padding: 13px 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all .25s;
+  box-shadow: 0 4px 15px #00acc140;
+}
+
+.Trials-module__6vxRjW__btnPrimary:hover {
+  background: linear-gradient(135deg, #00838f, #006064);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px #00acc159;
+}
+
+.Trials-module__6vxRjW__btnSecondary {
+  color: #d1d5db;
+  cursor: pointer;
+  background: none;
+  border: 1px solid #ffffff26;
+  border-radius: 10px;
+  padding: 13px 32px;
+  font-weight: 600;
+  transition: all .25s;
+}
+
+.Trials-module__6vxRjW__btnSecondary:hover {
+  color: #fff;
+  background: #ffffff0d;
+  border-color: #ffffff4d;
+}
+
+.Trials-module__6vxRjW__dashboardArea {
+  flex: 1;
+  padding: 30px 40px;
+  overflow-y: auto;
+}
+
+.Trials-module__6vxRjW__dashboardHeader {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__dashboardHeader h2 {
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.Trials-module__6vxRjW__emptyState {
+  text-align: center;
+  background: #ffffff05;
+  border: 2px dashed #ffffff1a;
+  border-radius: 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  padding: 80px 40px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__emptyIcon {
+  margin-bottom: 20px;
+  font-size: 4rem;
+}
+
+.Trials-module__6vxRjW__emptyState h2 {
+  color: #fff;
+  margin-bottom: 12px;
+  font-size: 1.8rem;
+}
+
+.Trials-module__6vxRjW__emptyState p {
+  color: #9ca3af;
+  max-width: 400px;
+  margin-bottom: 32px;
+}
+
+.Trials-module__6vxRjW__emptyActions {
+  gap: 16px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__trialsGrid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  display: grid;
+}
+
+.Trials-module__6vxRjW__trialCard {
+  cursor: pointer;
+  background: #111827;
+  border: 1px solid #ffffff1a;
+  border-radius: 16px;
+  transition: all .3s;
+  overflow: hidden;
+}
+
+.Trials-module__6vxRjW__trialCard:hover {
+  border-color: #00acc1;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px #00acc133;
+}
+
+.Trials-module__6vxRjW__trialImage {
+  justify-content: center;
+  align-items: center;
+  height: 140px;
+  display: flex;
+  position: relative;
+}
+
+.Trials-module__6vxRjW__moleculeIcon {
+  opacity: .9;
+  font-size: 3rem;
+}
+
+.Trials-module__6vxRjW__trialInfo {
+  padding: 16px;
+}
+
+.Trials-module__6vxRjW__trialInfo h3 {
+  color: #fff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+  font-size: 1.1rem;
+  overflow: hidden;
+}
+
+.Trials-module__6vxRjW__trialMission {
+  color: #9ca3af;
+  margin-bottom: 12px;
+  font-size: .8rem;
+}
+
+.Trials-module__6vxRjW__trialStats {
+  color: #4dd0e1;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: .85rem;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__trialStatus {
+  border-radius: 99px;
+  padding: 4px 10px;
+  font-size: .75rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.Trials-module__6vxRjW__trialStatus.Trials-module__6vxRjW__pending {
+  color: #fbbf24;
+  background: #fbbf2426;
+}
+
+.Trials-module__6vxRjW__trialStatus.Trials-module__6vxRjW__in_progress {
+  color: #4dd0e1;
+  background: #00acc126;
+}
+
+.Trials-module__6vxRjW__trialStatus.Trials-module__6vxRjW__completed {
+  color: #00acc1;
+  background: #00acc126;
+}
+
+.Trials-module__6vxRjW__trialStatus.Trials-module__6vxRjW__failed {
+  color: #ef4444;
+  background: #ef444426;
+}
+
+.Trials-module__6vxRjW__roadmapArea {
+  flex: 1;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 40px;
+  overflow-y: auto;
+}
+
+.Trials-module__6vxRjW__backBtn {
+  color: #4dd0e1;
+  cursor: pointer;
+  background: none;
+  border: none;
+  margin-bottom: 24px;
+  padding: 8px 0;
+  font-size: .9rem;
+}
+
+.Trials-module__6vxRjW__backBtn:hover {
+  color: #00acc1;
+}
+
+.Trials-module__6vxRjW__loadingState {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 100px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__spinner {
+  border: 4px solid #00acc133;
+  border-top-color: #00acc1;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: 1s linear infinite Trials-module__6vxRjW__spin;
+}
+
+@keyframes Trials-module__6vxRjW__spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.Trials-module__6vxRjW__roadmapHeader {
+  background: #00acc11a;
+  border: 1px solid #00acc133;
+  border-radius: 16px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 40px;
+  padding: 24px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__roadmapSummary {
+  flex: 1;
+}
+
+.Trials-module__6vxRjW__roadmapSummary h2 {
+  color: #fff;
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+}
+
+.Trials-module__6vxRjW__roadmapSummary p {
+  color: #9ca3af;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.Trials-module__6vxRjW__successProb {
+  align-items: center;
+  gap: 12px;
+  display: flex;
+}
+
+.Trials-module__6vxRjW__successProb span {
+  color: #9ca3af;
+  font-size: .85rem;
+}
+
+.Trials-module__6vxRjW__probBar {
+  background: #ffffff1a;
+  border-radius: 4px;
+  flex: 1;
+  max-width: 200px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.Trials-module__6vxRjW__probFill {
+  background: linear-gradient(90deg, #00acc1, #00acc1);
+  height: 100%;
+  transition: width .5s;
+}
+
+.Trials-module__6vxRjW__probValue {
+  font-weight: 700;
+  color: #00acc1 !important;
+}
+
+.Trials-module__6vxRjW__proceedBtn {
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #00acc1, #4dd0e1);
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.Trials-module__6vxRjW__proceedBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px #00acc166;
+}
+
+.Trials-module__6vxRjW__phasesTimeline {
+  padding-left: 40px;
+  position: relative;
+}
+
+.Trials-module__6vxRjW__phasesTimeline:before {
+  content: "";
+  background: linear-gradient(#00acc1, #4dd0e1, #00acc1);
+  width: 2px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 16px;
+}
+
+.Trials-module__6vxRjW__phaseItem {
+  background: #111827;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  padding: 24px;
+  position: relative;
+}
+
+.Trials-module__6vxRjW__phaseNumber {
+  color: #fff;
+  z-index: 1;
+  background: #00acc1;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  font-size: .9rem;
+  font-weight: 700;
+  display: flex;
+  position: absolute;
+  top: 24px;
+  left: -40px;
+}
+
+.Trials-module__6vxRjW__phaseContent h3 {
+  color: #fff;
+  margin-bottom: 4px;
+  font-size: 1.2rem;
+}
+
+.Trials-module__6vxRjW__phaseDuration {
+  color: #4dd0e1;
+  margin-bottom: 12px;
+  font-size: .85rem;
+  display: block;
+}
+
+.Trials-module__6vxRjW__phaseContent p {
+  color: #9ca3af;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.Trials-module__6vxRjW__phaseActivities {
+  margin-bottom: 12px;
+}
+
+.Trials-module__6vxRjW__phaseActivities strong {
+  color: #80deea;
+  margin-bottom: 8px;
+  font-size: .85rem;
+  display: block;
+}
+
+.Trials-module__6vxRjW__phaseActivities ul {
+  color: #d1d5db;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.Trials-module__6vxRjW__phaseActivities li {
+  margin-bottom: 4px;
+  font-size: .9rem;
+}
+
+.Trials-module__6vxRjW__phaseRisk {
+  color: #fca5a5;
+  background: #ef44441a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: .85rem;
+}
+
+.Trials-module__6vxRjW__badge {
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-size: .8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.Trials-module__6vxRjW__eventDesc {
+  text-align: left;
+}
+
+.Trials-module__6vxRjW__reason {
+  color: #fca5a5;
+  margin-bottom: 24px;
+  font-size: 1.1rem;
+}
+
+/*# sourceMappingURL=src_app_dashboard_clinical-trials_Trials_module_css_bad6b30c._.single.css.map*/

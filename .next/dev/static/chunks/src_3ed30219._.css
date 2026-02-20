@@ -1,0 +1,331 @@
+/* [project]/src/app/dashboard/Dashboard.module.css [app-client] (css) */
+.Dashboard-module__8Mmpzq__container {
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.Dashboard-module__8Mmpzq__scrollArea {
+  flex: 1;
+  padding: 0 40px 40px;
+  overflow-y: auto;
+}
+
+.Dashboard-module__8Mmpzq__statsRow {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+  display: grid;
+}
+
+.Dashboard-module__8Mmpzq__statCard {
+  background: #151921;
+  border: 1px solid #00acc114;
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.Dashboard-module__8Mmpzq__statLabel {
+  color: #9ca3af;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: .9rem;
+  display: flex;
+}
+
+.Dashboard-module__8Mmpzq__statValue {
+  color: #fff;
+  margin-bottom: 4px;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.Dashboard-module__8Mmpzq__statChange {
+  color: #4dd0e1;
+  font-size: .85rem;
+  font-weight: 500;
+}
+
+.Dashboard-module__8Mmpzq__iconBlue {
+  color: #00acc1;
+}
+
+.Dashboard-module__8Mmpzq__iconPurple {
+  color: #4dd0e1;
+}
+
+.Dashboard-module__8Mmpzq__iconCyan {
+  color: #80deea;
+}
+
+.Dashboard-module__8Mmpzq__progressBar {
+  background: #1f2937;
+  border-radius: 3px;
+  height: 6px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.Dashboard-module__8Mmpzq__progressFill {
+  background: linear-gradient(90deg, #00acc1, #4dd0e1);
+  border-radius: 3px;
+  height: 100%;
+}
+
+.Dashboard-module__8Mmpzq__progressText {
+  color: #6b7280;
+  text-align: right;
+  font-size: .75rem;
+}
+
+.Dashboard-module__8Mmpzq__sectionTitle {
+  color: #fff;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+}
+
+.Dashboard-module__8Mmpzq__modulesGrid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+  display: grid;
+}
+
+.Dashboard-module__8Mmpzq__moduleCard {
+  background: #151921;
+  border: 1px solid #00acc10f;
+  border-radius: 16px;
+  flex-direction: column;
+  transition: transform .2s, box-shadow .2s;
+  display: flex;
+  overflow: hidden;
+}
+
+.Dashboard-module__8Mmpzq__moduleCard:hover {
+  border-color: #00acc133;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px #00acc126;
+}
+
+.Dashboard-module__8Mmpzq__cardBg {
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  height: 140px;
+}
+
+.Dashboard-module__8Mmpzq__bgBuilder {
+  background: linear-gradient(135deg, #00838f, #004d40);
+}
+
+.Dashboard-module__8Mmpzq__bgTrials {
+  background: linear-gradient(135deg, #00acc1, #00838f);
+}
+
+.Dashboard-module__8Mmpzq__bgQuiz {
+  background: linear-gradient(135deg, #4dd0e1, #00acc1);
+}
+
+.Dashboard-module__8Mmpzq__cardContent {
+  flex-direction: column;
+  flex: 1;
+  padding: 24px;
+  display: flex;
+}
+
+.Dashboard-module__8Mmpzq__tagAdvanced, .Dashboard-module__8Mmpzq__tagSim, .Dashboard-module__8Mmpzq__tagTraining {
+  border-radius: 4px;
+  width: fit-content;
+  margin-bottom: 12px;
+  padding: 4px 8px;
+  font-size: .7rem;
+  font-weight: 800;
+  display: inline-block;
+}
+
+.Dashboard-module__8Mmpzq__tagAdvanced {
+  color: #4dd0e1;
+  background: #00acc11a;
+}
+
+.Dashboard-module__8Mmpzq__tagSim {
+  color: #80deea;
+  background: #4dd0e11a;
+}
+
+.Dashboard-module__8Mmpzq__tagTraining {
+  color: #b2ebf2;
+  background: #80deea1a;
+}
+
+.Dashboard-module__8Mmpzq__cardTime {
+  color: #6b7280;
+  float: right;
+  margin-top: -30px;
+  font-size: .75rem;
+}
+
+.Dashboard-module__8Mmpzq__cardTitle {
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.Dashboard-module__8Mmpzq__cardDesc {
+  color: #9ca3af;
+  flex: 1;
+  margin-bottom: 24px;
+  font-size: .9rem;
+  line-height: 1.5;
+}
+
+.Dashboard-module__8Mmpzq__btnEnter {
+  color: #fff;
+  text-align: center;
+  background: linear-gradient(135deg, #00acc1, #00838f);
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  padding: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all .2s;
+  display: block;
+}
+
+.Dashboard-module__8Mmpzq__btnEnter:hover {
+  background: linear-gradient(135deg, #4dd0e1, #00acc1);
+  box-shadow: 0 4px 15px #00acc14d;
+}
+
+.Dashboard-module__8Mmpzq__achievements {
+  background: #151921;
+  border: 1px solid #00acc10f;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.Dashboard-module__8Mmpzq__achievementsTitle {
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
+
+.Dashboard-module__8Mmpzq__achievementRow {
+  background: #00acc108;
+  border-radius: 8px;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  display: flex;
+}
+
+.Dashboard-module__8Mmpzq__achievementIcon {
+  color: #4dd0e1;
+  background: #00acc126;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  display: flex;
+}
+
+.Dashboard-module__8Mmpzq__achievementName {
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.Dashboard-module__8Mmpzq__achievementDesc {
+  color: #6b7280;
+  font-size: .8rem;
+}
+
+.Dashboard-module__8Mmpzq__achievementTime {
+  color: #6b7280;
+  margin-left: auto;
+  font-size: .8rem;
+}
+
+/* [project]/src/components/layout/TopHeader.module.css [app-client] (css) */
+.TopHeader-module__TNE3sW__header {
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  margin-bottom: 20px;
+  padding: 0 40px;
+  display: flex;
+}
+
+.TopHeader-module__TNE3sW__titleSection {
+  flex-direction: column;
+  display: flex;
+}
+
+.TopHeader-module__TNE3sW__title {
+  color: #fff;
+  margin-bottom: 4px;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.TopHeader-module__TNE3sW__subtitle {
+  color: #9ca3af;
+  font-size: .9rem;
+}
+
+.TopHeader-module__TNE3sW__actions {
+  align-items: center;
+  gap: 16px;
+  display: flex;
+}
+
+.TopHeader-module__TNE3sW__iconBtn {
+  color: #80deea;
+  cursor: pointer;
+  background: #00acc114;
+  border: 1px solid #00acc11a;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  transition: all .2s;
+  display: flex;
+}
+
+.TopHeader-module__TNE3sW__iconBtn:hover {
+  background: #00acc126;
+  border-color: #00acc140;
+}
+
+.TopHeader-module__TNE3sW__primaryBtn {
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, #00acc1, #00838f);
+  border: none;
+  border-radius: 99px;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all .2s;
+  display: flex;
+  box-shadow: 0 4px 12px #00acc14d;
+}
+
+.TopHeader-module__TNE3sW__primaryBtn:hover {
+  background: linear-gradient(135deg, #4dd0e1, #00acc1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px #00acc159;
+}
+
+/*# sourceMappingURL=src_3ed30219._.css.map*/

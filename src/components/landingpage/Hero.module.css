@@ -89,3 +89,54 @@
     max-width: 600px;
     margin: 0 auto;
 }
+
+/* Floating Hero Image - Particle-like effect */
+.floatingImage {
+    position: absolute;
+    bottom: 8%;
+    right: 5%;
+    z-index: 2;
+    will-change: transform, opacity;
+    pointer-events: none;
+}
+
+.heroImage {
+    width: auto;
+    height: auto;
+    max-width: 450px;
+    filter: drop-shadow(0 0 30px rgba(255, 107, 107, 0.3)) drop-shadow(0 0 60px rgba(100, 149, 237, 0.2));
+    opacity: 0.95;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .floatingImage {
+        right: 2%;
+        bottom: 5%;
+    }
+
+    .heroImage {
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .floatingImage {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        margin-top: 3rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .heroImage {
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .heroImage {
+        max-width: 220px;
+    }
+}

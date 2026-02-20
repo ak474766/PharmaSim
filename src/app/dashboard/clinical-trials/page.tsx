@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styles from './Trials.module.css';
 import TopHeader from '@/components/layout/TopHeader';
 import { useAuth } from '@/context/AuthContext';
@@ -43,6 +43,8 @@ export default function ClinicalTrialsPage() {
     const [gameOverReason, setGameOverReason] = useState('');
     const [cachedEvents, setCachedEvents] = useState<TrialEvent[]>([]);
     const [eventIndex, setEventIndex] = useState(0);
+    const [scenarioDeck, setScenarioDeck] = useState<TrialEvent[]>([]); // Future events
+    const [isGeneratingScenario, setIsGeneratingScenario] = useState(false);
 
     // Quiz State
     const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
@@ -65,7 +67,7 @@ export default function ClinicalTrialsPage() {
     }, [user]);
 
     // Handle clicking a trial card - load from Firebase or generate roadmap
-    const handleTrialClick = async (trial: TrialSubmission) => {
+    const handleTrialClick = useCallback(async (trial: TrialSubmission) => {
         setSelectedTrial(trial);
         setViewState('roadmap');
 
@@ -95,15 +97,29 @@ export default function ClinicalTrialsPage() {
         // Save to Firebase
         await TrialService.saveRoadmap(trial.id, roadmap);
 
-        // Update local state
-        setSelectedTrial({ ...trial, roadmap });
+        // Update local state (add generatedAt to match RoadmapData type)
+        const roadmapWithTimestamp = { ...roadmap, generatedAt: Date.now() };
+        setSelectedTrial({ ...trial, roadmap: roadmapWithTimestamp });
         setStats({
             budget: INITIAL_BUDGET,
             efficacy: trial.stats.efficacy,
             safety: trial.stats.safety
         });
         setLoadingRoadmap(false);
-    };
+    }, []);
+
+    useEffect(() => {
+        if (loading || !user || submissions.length === 0 || selectedTrial) return;
+
+        const activeId = localStorage.getItem('active_trial_id');
+        if (!activeId) return;
+
+        const trial = submissions.find(s => s.id === activeId);
+        if (!trial) return;
+
+        localStorage.removeItem('active_trial_id');
+        handleTrialClick(trial);
+    }, [loading, user, submissions, selectedTrial, handleTrialClick]);
 
     // Start simulation from roadmap - AI-powered with caching
     const startSimulation = async () => {
@@ -147,59 +163,134 @@ export default function ClinicalTrialsPage() {
     };
 
     const startPlaying = async () => {
+        if (!selectedTrial?.roadmap) return;
         setGameState('playing');
-        await loadNextEvent();
+
+        // Check if we already have a scenario deck generated for this session
+        if (scenarioDeck.length === 0) {
+            setIsGeneratingScenario(true);
+            setLoadingEvent(true);
+
+            try {
+                // Construct chemical context
+                let chemicalContext = '';
+                if (selectedTrial.chemicalStats) {
+                    const cs = selectedTrial.chemicalStats;
+                    const groups = cs.functionalGroups?.join(', ') || 'None';
+                    const warnings = cs.warnings?.join('; ') || 'None';
+                    const aromaticText = (cs.bonds?.aromatic || 0) > 0 ? 'Contains Aromatic System' : 'Non-aromatic';
+
+                    chemicalContext = `
+                        Formula: ${cs.formula}
+                        Molecular Weight: ${cs.molecularWeight}
+                        Key Functional Groups: ${groups}
+                        Structure Type: ${aromaticText}
+                        Chemical Warnings: ${warnings}
+                    `.trim();
+                }
+
+                // Generate scenarios for ALL phases in parallel
+                const phasePromises = selectedTrial.roadmap.phases.map((phase, idx) =>
+                    AiService.generatePhaseScenarios(
+                        selectedTrial.moleculeName,
+                        phase.name,
+                        phase.description,
+                        chemicalContext
+                    ).then(events => events.map(e => ({ ...e, phaseIndex: idx })))
+                );
+
+                const results = await Promise.all(phasePromises);
+                const fullDeck = results.flat();
+
+                if (fullDeck.length === 0) {
+                    // Fallback if AI fails completely
+                    console.error("AI failed to generate any events. Using fallback.");
+                    // We could manually insert a generic event here
+                }
+
+                setScenarioDeck(fullDeck);
+
+                // Load the first event immediately from the new deck
+                if (fullDeck.length > 0) {
+                    const firstEvent = fullDeck[0];
+                    setCurrentEvent(firstEvent);
+
+                    // Add to cache as the current event
+                    const newCachedEvents = [...cachedEvents, firstEvent];
+                    setCachedEvents(newCachedEvents);
+
+                    // Save initial state
+                    await TrialService.updateSimulationState(selectedTrial.id, {
+                        currentPhaseIndex: 0,
+                        eventIndex: 0,
+                        budget: stats.budget,
+                        efficacy: stats.efficacy,
+                        safety: stats.safety,
+                        previousEvents: [] as string[],
+                        logs: logs,
+                        cachedEvents: newCachedEvents
+                    });
+                }
+            } catch (error) {
+                console.error("Failed to generate simulation scenario:", error);
+            } finally {
+                setIsGeneratingScenario(false);
+                setLoadingEvent(false);
+            }
+        } else {
+            // Resume or deck already loaded
+            await loadNextEvent();
+        }
     };
 
-    // Load AI-generated event for current phase (with caching)
+    // Load next event from the pre-generated deck
     const loadNextEvent = async () => {
         if (!selectedTrial?.roadmap) return;
 
-        const phase = selectedTrial.roadmap.phases[currentPhaseIndex];
-        if (!phase) {
-            // All phases complete
+        // Calculate next event index
+        const nextIdx = eventIndex + 1; // logical index
+
+        // In the pre-generated deck, events are sequential.
+        // We need to find the next event. 
+        // If we are just starting, startPlaying handles it. 
+        // This function is for AFTER a choice is made.
+
+        // However, we need to handle "Phase Transitions". 
+        // The deck has `phaseIndex` embedded.
+
+        // Ideally, we just increment `eventIndex` state.
+        // But `eventIndex` in state is currently used as "index in cachedEvents".
+        // Let's assume cachedEvents grows as we play.
+
+        // So simply:
+        if (nextIdx < scenarioDeck.length) {
+            const nextEvent = scenarioDeck[nextIdx];
+            setCurrentEvent(nextEvent);
+            setEventIndex(nextIdx);
+
+            // Check if phase changed
+            if (nextEvent.phaseIndex !== currentPhaseIndex) {
+                setCurrentPhaseIndex(nextEvent.phaseIndex || currentPhaseIndex);
+            }
+
+            // Update cache and persistence
+            const newCachedEvents = [...cachedEvents, nextEvent];
+            setCachedEvents(newCachedEvents);
+
+            await TrialService.updateSimulationState(selectedTrial.id, {
+                currentPhaseIndex: nextEvent.phaseIndex || currentPhaseIndex,
+                eventIndex: nextIdx,
+                budget: stats.budget,
+                efficacy: stats.efficacy,
+                safety: stats.safety,
+                logs,
+                previousEvents,
+                cachedEvents: newCachedEvents
+            });
+        } else {
+            // No more events in deck -> Victory!
             handleVictory();
-            return;
         }
-
-        // Check if we have this event cached already
-        const nextEventIdx = eventIndex;
-        if (cachedEvents[nextEventIdx]) {
-            setCurrentEvent(cachedEvents[nextEventIdx]);
-            return;
-        }
-
-        // Generate new event via AI
-        setLoadingEvent(true);
-        const event = await AiService.generateTrialEvent(
-            selectedTrial.moleculeName,
-            phase.name,
-            phase.description,
-            stats,
-            previousEvents
-        );
-
-        // Add phaseIndex to the event for caching
-        const eventWithPhase = { ...event, phaseIndex: currentPhaseIndex };
-
-        // Add to cache
-        const newCachedEvents = [...cachedEvents, eventWithPhase];
-        setCachedEvents(newCachedEvents);
-        setCurrentEvent(event);
-
-        // Save cached events to Firebase immediately
-        await TrialService.updateSimulationState(selectedTrial.id, {
-            currentPhaseIndex,
-            eventIndex: nextEventIdx,
-            budget: stats.budget,
-            efficacy: stats.efficacy,
-            safety: stats.safety,
-            logs,
-            previousEvents,
-            cachedEvents: newCachedEvents
-        });
-
-        setLoadingEvent(false);
     };
 
     // Handle choice selection
@@ -580,6 +671,53 @@ export default function ClinicalTrialsPage() {
                     </div>
                 </div>
 
+                {/* Chemical Profile Display */}
+                {selectedTrial?.chemicalStats && (
+                    <div style={{
+                        margin: '0 20px 20px 20px',
+                        padding: '12px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        fontSize: '0.9rem'
+                    }}>
+                        <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', alignItems: 'center' }}>
+                            <strong style={{ color: '#9ca3af', fontSize: '0.8rem', letterSpacing: '1px' }}>MICRO-STRUCTURE:</strong>
+                            <span style={{ color: '#e5e7eb', fontFamily: 'monospace' }}>{selectedTrial.chemicalStats.formula}</span>
+                            <span style={{ color: '#6b7280' }}>|</span>
+                            <span style={{ color: '#e5e7eb' }}>{selectedTrial.chemicalStats.molecularWeight} Da</span>
+
+                            {selectedTrial.chemicalStats.functionalGroups?.map((fg, i) => (
+                                <span key={i} style={{
+                                    background: 'rgba(59, 130, 246, 0.2)',
+                                    color: '#93c5fd',
+                                    padding: '2px 8px',
+                                    borderRadius: '4px',
+                                    fontSize: '0.8rem'
+                                }}>
+                                    {fg}
+                                </span>
+                            ))}
+
+                            {(selectedTrial.chemicalStats.warnings?.length ?? 0) > 0 && (
+                                <span style={{
+                                    background: 'rgba(239, 68, 68, 0.2)',
+                                    color: '#fca5a5',
+                                    padding: '2px 8px',
+                                    borderRadius: '4px',
+                                    fontSize: '0.8rem',
+                                    marginLeft: 'auto',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px'
+                                }}>
+                                    ⚠️ {selectedTrial.chemicalStats.warnings?.length} Structural Warnings
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                )}
+
                 {/* Main Content Area */}
                 <div className={styles.mainStage}>
                     {/* INTRO */}
@@ -603,10 +741,15 @@ export default function ClinicalTrialsPage() {
                     {/* PLAYING */}
                     {gameState === 'playing' && (
                         <>
-                            {loadingEvent ? (
+                            {isGeneratingScenario || loadingEvent ? (
                                 <div className={styles.loadingState}>
                                     <div className={styles.spinner}></div>
-                                    <p>AI is generating next event...</p>
+                                    <p>{isGeneratingScenario ? 'Generating Full Trial Scenarios...' : 'Loading...'}</p>
+                                    {isGeneratingScenario && (
+                                        <p style={{ fontSize: '0.8rem', color: '#9ca3af', marginTop: '10px' }}>
+                                            Creating events for all 4 phases...
+                                        </p>
+                                    )}
                                 </div>
                             ) : currentEvent ? (
                                 <div className={styles.card} style={{ borderColor: '#3b82f6' }}>
@@ -642,20 +785,129 @@ export default function ClinicalTrialsPage() {
 
                     {/* VICTORY */}
                     {gameState === 'victory' && (
-                        <div className={`${styles.card} ${styles.winCard}`}>
-                            <h1>🎉 FDA APPROVED!</h1>
-                            <p>Excellent work! The drug has been approved for market distribution.</p>
-                            <p>Now, to complete <strong>Semester {mission.level}</strong>, you must pass the final exam.</p>
-                            <button className={styles.btnPrimary} onClick={startQuiz}>Take Semester Exam 📝</button>
+                        <div className={styles.victoryOverlay}>
+                            {/* Animated Particles */}
+                            <div className={styles.victoryParticles}>
+                                {Array.from({ length: 30 }).map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className={styles.victoryParticle}
+                                        style={{
+                                            left: `${Math.random() * 100}%`,
+                                            background: ['#10b981', '#34d399', '#6ee7b7', '#fbbf24', '#a78bfa', '#60a5fa'][i % 6],
+                                            width: `${4 + Math.random() * 8}px`,
+                                            height: `${4 + Math.random() * 8}px`,
+                                            animationDuration: `${2 + Math.random() * 4}s`,
+                                            animationDelay: `${Math.random() * 3}s`,
+                                        }}
+                                    />
+                                ))}
+                            </div>
+
+                            <div className={styles.victoryCard}>
+                                <span className={styles.victoryIcon}>🎉</span>
+                                <h1 className={styles.victoryTitle}>FDA APPROVED!</h1>
+                                <p className={styles.victorySubtitle}>
+                                    Excellent work, Doctor! Your drug <strong>{selectedTrial?.moleculeName}</strong> has passed all clinical trial phases and is cleared for market distribution.
+                                </p>
+
+                                {/* Final Stats */}
+                                <div className={styles.victoryStats}>
+                                    <div className={styles.victoryStat}>
+                                        <span className={styles.victoryStatValue} style={{ color: '#10b981' }}>
+                                            ${(stats.budget / 1000000).toFixed(1)}M
+                                        </span>
+                                        <span className={styles.victoryStatLabel}>Budget Left</span>
+                                    </div>
+                                    <div className={styles.victoryStat}>
+                                        <span className={styles.victoryStatValue} style={{ color: '#60a5fa' }}>
+                                            {stats.efficacy}%
+                                        </span>
+                                        <span className={styles.victoryStatLabel}>Efficacy</span>
+                                    </div>
+                                    <div className={styles.victoryStat}>
+                                        <span className={styles.victoryStatValue} style={{ color: '#a78bfa' }}>
+                                            {stats.safety}%
+                                        </span>
+                                        <span className={styles.victoryStatLabel}>Safety</span>
+                                    </div>
+                                </div>
+
+                                {/* XP Badge */}
+                                <div className={styles.xpBadge}>⭐ +200 XP Earned</div>
+
+                                {/* Achievement */}
+                                <div className={styles.achievementUnlock}>
+                                    <span className={styles.achieveIcon}>💊</span>
+                                    <div className={styles.achieveInfo}>
+                                        <div className={styles.achieveLabel}>Achievement Unlocked</div>
+                                        <div className={styles.achieveTitle}>Trial Master</div>
+                                    </div>
+                                </div>
+
+                                <p style={{ color: '#9ca3af', marginBottom: '24px', fontSize: '0.95rem' }}>
+                                    To complete <strong style={{ color: '#fff' }}>Semester {mission.level}</strong>, pass the final exam.
+                                </p>
+
+                                <div className={styles.victoryActions}>
+                                    <button className={styles.btnVictory} onClick={startQuiz}>
+                                        Take Semester Exam 📝
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     )}
 
                     {/* GAMEOVER */}
                     {gameState === 'gameover' && (
-                        <div className={`${styles.card} ${styles.lossCard}`}>
-                            <h1>🚫 Trial Terminated</h1>
-                            <div className={styles.reason}>{gameOverReason}</div>
-                            <button className={styles.btnSecondary} onClick={goBackToDashboard}>Return to Dashboard</button>
+                        <div className={styles.gameoverOverlay}>
+                            <div className={styles.gameoverCard}>
+                                <span className={styles.gameoverIcon}>🚫</span>
+                                <h1 className={styles.gameoverTitle}>Trial Terminated</h1>
+
+                                <div className={styles.gameoverReason}>{gameOverReason}</div>
+
+                                {/* Stats at Failure */}
+                                <div className={styles.gameoverStats}>
+                                    <div className={styles.gameoverStat}>
+                                        <span className={styles.gameoverStatValue} style={{ color: stats.budget <= 0 ? '#ef4444' : '#10b981' }}>
+                                            ${(stats.budget / 1000000).toFixed(1)}M
+                                        </span>
+                                        <span className={styles.gameoverStatLabel}>Budget</span>
+                                    </div>
+                                    <div className={styles.gameoverStat}>
+                                        <span className={styles.gameoverStatValue} style={{ color: '#60a5fa' }}>
+                                            {stats.efficacy}%
+                                        </span>
+                                        <span className={styles.gameoverStatLabel}>Efficacy</span>
+                                    </div>
+                                    <div className={styles.gameoverStat}>
+                                        <span className={styles.gameoverStatValue} style={{ color: stats.safety <= 20 ? '#ef4444' : '#a78bfa' }}>
+                                            {stats.safety}%
+                                        </span>
+                                        <span className={styles.gameoverStatLabel}>Safety</span>
+                                    </div>
+                                </div>
+
+                                <p className={styles.gameoverTip}>
+                                    💡 Tip: Balance cost-cutting with safety. Cutting too many corners leads to trial termination.
+                                </p>
+
+                                <div className={styles.gameoverActions}>
+                                    <button className={styles.btnRetry} onClick={() => {
+                                        setScenarioDeck([]);
+                                        setEventIndex(-1);
+                                        setCachedEvents([]);
+                                        setGameState('intro');
+                                        startPlaying();
+                                    }}>
+                                        🔁 Retry Trial
+                                    </button>
+                                    <button className={styles.btnGhost} onClick={goBackToDashboard}>
+                                        Return to Dashboard
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

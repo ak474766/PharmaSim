@@ -34,22 +34,23 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #1f2937;
-    border: none;
-    color: #fff;
+    background: rgba(0, 172, 193, 0.08);
+    border: 1px solid rgba(0, 172, 193, 0.1);
+    color: #80DEEA;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
 }
 
 .iconBtn:hover {
-    background: #374151;
+    background: rgba(0, 172, 193, 0.15);
+    border-color: rgba(0, 172, 193, 0.25);
 }
 
 .primaryBtn {
-    background: #2563eb;
+    background: linear-gradient(135deg, #00ACC1, #00838F);
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -59,10 +60,12 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: background 0.2s;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 172, 193, 0.3);
 }
 
 .primaryBtn:hover {
-    background: #1d4ed8;
+    background: linear-gradient(135deg, #4DD0E1, #00ACC1);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 172, 193, 0.35);
 }

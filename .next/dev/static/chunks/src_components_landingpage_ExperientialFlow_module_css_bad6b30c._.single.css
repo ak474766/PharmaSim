@@ -1,0 +1,61 @@
+/* [project]/src/components/landingpage/ExperientialFlow.module.css [app-client] (css) */
+.ExperientialFlow-module__qUnxda__section {
+  background: var(--bg-secondary);
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.ExperientialFlow-module__qUnxda__container {
+  width: 400vw;
+  height: 100%;
+  display: flex;
+}
+
+.ExperientialFlow-module__qUnxda__panel {
+  border-right: 1px solid #ffffff0d;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100%;
+  padding: 0 5%;
+  display: flex;
+  position: relative;
+}
+
+.ExperientialFlow-module__qUnxda__panel1 {
+  background: radial-gradient(circle at center, #101010, var(--bg-secondary));
+}
+
+.ExperientialFlow-module__qUnxda__panel2 {
+  background: radial-gradient(circle at center, #151515, var(--bg-secondary));
+}
+
+.ExperientialFlow-module__qUnxda__panel3 {
+  background: radial-gradient(circle at center, #1a1a1a, var(--bg-secondary));
+}
+
+.ExperientialFlow-module__qUnxda__panel4 {
+  background: radial-gradient(circle at center, #111, var(--bg-secondary));
+}
+
+.ExperientialFlow-module__qUnxda__step {
+  color: var(--text-primary);
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(#fff, #666);
+  -webkit-background-clip: text;
+  background-clip: text;
+  margin-bottom: 20px;
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 700;
+}
+
+.ExperientialFlow-module__qUnxda__desc {
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 600px;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+}
+
+/*# sourceMappingURL=src_components_landingpage_ExperientialFlow_module_css_bad6b30c._.single.css.map*/

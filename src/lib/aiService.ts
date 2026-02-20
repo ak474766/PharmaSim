@@ -1,13 +1,89 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+/**
+ * AI Service - Client-side facade for AI API operations
+ * 
+ * This service handles:
+ * 1. API calls to the AI routes with proper typing
+ * 2. Error handling with fallback responses
+ * 3. Rate limit and quota handling with graceful degradation
+ */
 
-// Initialize Gemini Client
-// NOTE: In a real app, do not expose API keys in client-side code.
-// For this demo/hackathon, we are using the key from env directly.
-const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_GENAI_API_KEY || '';
-const genAI = new GoogleGenerativeAI(API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+import { TrialPhaseData, CachedTrialEvent } from './trialService';
+import {
+    MoleculeAnalysisResult,
+    QuizQuestionResult,
+    TrialRoadmapResult,
+    TrialEventResult
+} from '@/app/actions/ai';
 
-// Helper function to check if error is rate limit related
+// ============================================================================
+// Type Re-exports for backward compatibility
+// ============================================================================
+
+/** Roadmap data returned from AI (without generatedAt which is added by TrialService) */
+export interface AIRoadmapData {
+    summary: string;
+    phases: TrialPhaseData[];
+    successProbability: number;
+}
+
+// ============================================================================
+// API Response Types
+// ============================================================================
+
+interface APISuccessResponse<T> {
+    success: true;
+    [key: string]: unknown;
+}
+
+interface APIErrorResponse {
+    success: false;
+    error: string;
+    errorType: string;
+    message: string;
+}
+
+type APIResponse<T> = (APISuccessResponse<T> & T) | APIErrorResponse;
+
+// ============================================================================
+// HTTP Client Utilities
+// ============================================================================
+
+/**
+ * Type-safe POST request with error handling
+ */
+async function postJSON<T>(url: string, body: unknown): Promise<T> {
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+
+    const text = await res.text();
+    let parsed: APIResponse<T> | null = null;
+
+    try {
+        parsed = text ? JSON.parse(text) : null;
+    } catch {
+        parsed = null;
+    }
+
+    if (!res.ok) {
+        const message = (parsed as APIErrorResponse)?.message ||
+            (parsed as APIErrorResponse)?.error ||
+            text ||
+            res.statusText;
+        const err = new Error(message) as Error & { status: number; errorType?: string };
+        err.status = res.status;
+        err.errorType = (parsed as APIErrorResponse)?.errorType;
+        throw err;
+    }
+
+    return (parsed ?? {}) as T;
+}
+
+/**
+ * Check if error is rate limit or quota related
+ */
 function isRateLimitError(errorMessage: string, errorStatus?: number): boolean {
     return (
         errorStatus === 429 ||
@@ -22,185 +98,139 @@ function isRateLimitError(errorMessage: string, errorStatus?: number): boolean {
     );
 }
 
+/**
+ * Extract error info from unknown error
+ */
+function parseError(error: unknown): { message: string; status?: number } {
+    const err = error as { message?: string; status?: number; response?: { status?: number } };
+    return {
+        message: err?.message || String(error) || 'Unknown error',
+        status: err?.status || err?.response?.status
+    };
+}
+
+// ============================================================================
+// AI Service - Public API
+// ============================================================================
+
 export const AiService = {
-    // Phase 1: Analyze Student's Modified Molecule
+    /**
+     * Analyze a molecule modification
+     * Returns AI analysis with efficacy/safety scores, or fallback data on failure
+     */
     async analyzeMolecule(
         moleculeName: string,
         atomCount: number,
         userModifications: string
-    ) {
-        if (!API_KEY) {
-            return {
-                analysis: "AI Service Unavailable (Missing Key)",
-                safety: 50,
-                efficacy: 50,
-                feedback: "Please configure your API key in .env.local"
-            };
-        }
-
+    ): Promise<MoleculeAnalysisResult> {
         try {
-            const prompt = `
-                Act as a Pharmacy Professor.
-                A student has submitted a modified version of ${moleculeName}.
-                Data:
-                - Atom Count: ${atomCount}
-                - Student's Note/Mod: "${userModifications}"
-                
-                Analyze this. 
-                1. What is the pharmacological impact?
-                2. Estimate specific Efficacy (0-100) and Safety (0-100) scores based on this change (be realistic based on med chem principles).
-                3. Provide 2 sentences of constructive feedback.
-                
-                Respond in JSON format:
-                {
-                    "analysis": "...",
-                    "efficacy": number,
-                    "safety": number,
-                    "feedback": "..."
-                }
-            `;
+            const response = await postJSON<MoleculeAnalysisResult & { success?: boolean }>(
+                '/api/ai/analyze-molecule',
+                { moleculeName, atomCount, userModifications }
+            );
 
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const text = response.text();
-
-            // Cleanup json markdown if present
-            const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
-            return JSON.parse(jsonStr);
+            // Extract just the result fields
+            return {
+                analysis: response.analysis,
+                efficacy: response.efficacy,
+                safety: response.safety,
+                feedback: response.feedback,
+                visualPrompt: response.visualPrompt || "A generic 3D molecule structure, clean scientific style"
+            };
 
         } catch (error: unknown) {
-            const err = error as { message?: string; status?: number; response?: { status?: number } };
-            const errorMessage = err?.message || String(error) || '';
-            const errorStatus = err?.status || err?.response?.status;
+            const { message, status } = parseError(error);
 
-            if (isRateLimitError(errorMessage, errorStatus)) {
-                console.warn("AI Service Warning: Rate limit or Model not found. Using simulated analysis.");
-                // Return simulated "good" result so user can continue
+            // API key missing - clear message to user
+            if (status === 503) {
+                return {
+                    analysis: "AI Service Unavailable (Missing Key)",
+                    safety: 50,
+                    efficacy: 50,
+                    feedback: "Please configure your API key in .env.local",
+                    visualPrompt: "A generic molecule structure in blue style"
+                };
+            }
+
+            // Rate limit - return simulated data
+            if (isRateLimitError(message, status)) {
+                console.warn("AI Service: Rate limit reached. Using simulated analysis.");
                 return {
                     analysis: `[Simulated] Your ${moleculeName} modification shows promise. The ${atomCount} atom structure maintains core stability.`,
                     efficacy: 65 + Math.floor(Math.random() * 20),
                     safety: 70 + Math.floor(Math.random() * 15),
-                    feedback: "API quota exceeded or model unavailable - using simulated analysis."
+                    feedback: "API quota exceeded - using simulated analysis.",
+                    visualPrompt: "A standard pharmaceutical molecule rendering"
                 };
             }
 
-            console.warn("AI Service Error:", errorMessage);
+            // Connection error
+            console.warn("AI Service Error:", message);
             return {
                 analysis: "Analysis failed due to connection error.",
                 efficacy: 40,
                 safety: 40,
-                feedback: "Could not connect to AI lab expert. Please check your internet connection."
+                feedback: "Could not connect to AI lab expert. Please check your connection.",
+                visualPrompt: "Error state molecule visualization"
             };
         }
     },
 
-    // Phase 2: Generate Context-Aware Quiz Question
-    async generateQuestion(topic: string, level: number) {
-        if (!API_KEY) return null;
-
+    /**
+     * Generate a quiz question
+     * Returns null on failure (allows fallback to local question bank)
+     */
+    async generateQuestion(topic: string, level: number): Promise<QuizQuestionResult | null> {
         try {
-            const prompt = `
-            Generate a single multiple-choice question for a B.Pharma student.
-            Topic: ${topic}
-            Difficulty Level: ${level} (1=Freshman, 8=Final Year).
-            
-            Respond in JSON:
-            {
-                "text": "Question text...",
-                "options": ["A", "B", "C", "D"],
-                "correctIndex": 0,
-                "explanation": "Why..."
-            }
-            `;
-
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const jsonStr = response.text().replace(/```json/g, '').replace(/```/g, '').trim();
-            return JSON.parse(jsonStr);
+            const response = await postJSON<{ question: QuizQuestionResult | null; success?: boolean }>(
+                '/api/ai/generate-question',
+                { topic, level }
+            );
+            return response.question;
 
         } catch (error: unknown) {
-            console.error("AI Question Gen Failed:", error);
+            const { message, status } = parseError(error);
 
-            const err = error as { message?: string; status?: number; response?: { status?: number } };
-            const errorMessage = err?.message || String(error) || '';
-            const errorStatus = err?.status || err?.response?.status;
-
-            if (isRateLimitError(errorMessage, errorStatus)) {
-                console.warn("API Rate Limit - using local question bank instead.");
+            if (isRateLimitError(message, status)) {
+                console.warn("AI Service: Rate limit - using local question bank.");
+            } else {
+                console.error("AI Question Gen Failed:", message);
             }
-            return null;
+
+            return null; // Fallback to local questions
         }
     },
 
     /**
-     * Generate clinical trial roadmap content for a molecule
+     * Generate clinical trial roadmap
+     * Returns AI-generated phases or fallback data on failure
      */
-    async generateTrialRoadmap(moleculeName: string, efficacy: number, safety: number) {
-        if (!API_KEY) return this.getFallbackRoadmap(moleculeName, efficacy, safety);
-
+    async generateTrialRoadmap(
+        moleculeName: string,
+        efficacy: number,
+        safety: number
+    ): Promise<AIRoadmapData> {
         try {
-            const prompt = `
-            You are a pharmaceutical regulatory expert. Generate detailed clinical trial phase content for a drug candidate called "${moleculeName}".
-            
-            Current stats:
-            - Efficacy Score: ${efficacy}%
-            - Safety Score: ${safety}%
-            
-            Generate content for each trial phase. Be realistic and educational.
-            
-            Respond in JSON format:
-            {
-                "summary": "Brief 2-sentence overview of the drug and its potential",
-                "phases": [
-                    {
-                        "name": "Preclinical",
-                        "duration": "6-12 months",
-                        "description": "Detailed description of what happens in this phase (2-3 sentences)",
-                        "keyActivities": ["Activity 1", "Activity 2", "Activity 3"],
-                        "risks": "Main risk for this phase based on the drug's stats"
-                    },
-                    {
-                        "name": "Phase I Clinical Trial",
-                        "duration": "1-2 years",
-                        "description": "Description...",
-                        "keyActivities": ["..."],
-                        "risks": "..."
-                    },
-                    {
-                        "name": "Phase II Clinical Trial",
-                        "duration": "2-3 years",
-                        "description": "Description...",
-                        "keyActivities": ["..."],
-                        "risks": "..."
-                    },
-                    {
-                        "name": "Phase III & FDA Review",
-                        "duration": "3-5 years",
-                        "description": "Description...",
-                        "keyActivities": ["..."],
-                        "risks": "..."
-                    }
-                ],
-                "successProbability": number
-            }
-            `;
+            const response = await postJSON<TrialRoadmapResult & { success?: boolean }>(
+                '/api/ai/trial-roadmap',
+                { moleculeName, efficacy, safety }
+            );
 
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const text = response.text();
-            const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
-            return JSON.parse(jsonStr);
+            return {
+                summary: response.summary,
+                phases: response.phases,
+                successProbability: response.successProbability
+            };
 
         } catch (error: unknown) {
-            const err = error as { message?: string; status?: number; response?: { status?: number } };
-            const errorMessage = err?.message || String(error) || '';
-            const errorStatus = err?.status || err?.response?.status;
+            const { message, status } = parseError(error);
 
-            if (isRateLimitError(errorMessage, errorStatus)) {
-                console.warn("AI Service Warning: Rate limit or Model not found. Using fallback roadmap.");
+            if (isRateLimitError(message, status)) {
+                console.warn("AI Service: Rate limit - using fallback roadmap.");
             } else {
-                console.warn("AI Roadmap Generation Failed:", errorMessage);
+                console.warn("AI Roadmap Generation Failed:", message);
             }
+
             return this.getFallbackRoadmap(moleculeName, efficacy, safety);
         }
     },
@@ -208,7 +238,7 @@ export const AiService = {
     /**
      * Fallback roadmap when AI is unavailable
      */
-    getFallbackRoadmap(moleculeName: string, efficacy: number, safety: number) {
+    getFallbackRoadmap(moleculeName: string, efficacy: number, safety: number): AIRoadmapData {
         const successProb = Math.round((efficacy * 0.6 + safety * 0.4) * 0.8);
         return {
             summary: `${moleculeName} is a promising drug candidate currently under development. Based on preliminary analysis, it shows potential for therapeutic application.`,
@@ -256,96 +286,75 @@ export const AiService = {
     },
 
     /**
-     * Generate a dynamic trial event based on current phase and stats (AI-powered simulation)
+     * Generate a dynamic trial event for the simulation
+     * Returns AI event or fallback data on failure
      */
     async generateTrialEvent(
         moleculeName: string,
         phaseName: string,
         phaseDescription: string,
         currentStats: { budget: number; efficacy: number; safety: number },
-        previousEvents: string[]
-    ) {
-        if (!API_KEY) return this.getFallbackTrialEvent(phaseName, currentStats);
-
+        previousEvents: string[],
+        chemicalFeatures?: string
+    ): Promise<CachedTrialEvent> {
         try {
-            const prompt = `
-            You are a pharmaceutical regulatory simulation AI. Generate a realistic trial event for a drug called "${moleculeName}".
+            const response = await postJSON<TrialEventResult & { success?: boolean }>(
+                '/api/ai/trial-event',
+                { moleculeName, phaseName, phaseDescription, currentStats, previousEvents, chemicalFeatures }
+            );
 
-            Current Phase: ${phaseName}
-            Phase Description: ${phaseDescription}
-            
-            Current Trial Stats:
-            - Budget: $${(currentStats.budget / 1000000).toFixed(1)}M remaining
-            - Efficacy Score: ${currentStats.efficacy}%
-            - Safety Score: ${currentStats.safety}%
-
-            Previous events in this trial: ${previousEvents.length > 0 ? previousEvents.join(', ') : 'None yet'}
-
-            Generate ONE new event for this phase. The event should be:
-            1. Realistic for pharmaceutical trials
-            2. Educational about the drug development process
-            3. Have meaningful consequences based on choices
-
-            Respond in JSON format:
-            {
-                "title": "Short event title",
-                "description": "2-3 sentence detailed description of the situation",
-                "choices": [
-                    {
-                        "text": "Choice A (brief description)",
-                        "budgetEffect": number,
-                        "efficacyEffect": number,
-                        "safetyEffect": number,
-                        "outcomeText": "What happens when this choice is made (2 sentences)"
-                    },
-                    {
-                        "text": "Choice B (brief description)",
-                        "budgetEffect": number,
-                        "efficacyEffect": number,
-                        "safetyEffect": number,
-                        "outcomeText": "What happens"
-                    }
-                ],
-                "isPhaseComplete": boolean
-            }
-            `;
-
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const text = response.text();
-            const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
-            return JSON.parse(jsonStr);
+            return {
+                title: response.title,
+                description: response.description,
+                choices: response.choices,
+                isPhaseComplete: response.isPhaseComplete
+            };
 
         } catch (error: unknown) {
-            const err = error as { message?: string; status?: number; response?: { status?: number } };
-            const errorMessage = err?.message || String(error) || '';
-            const errorStatus = err?.status || err?.response?.status;
+            const { message, status } = parseError(error);
 
-            if (isRateLimitError(errorMessage, errorStatus)) {
-                console.warn("AI Service Warning: Rate limit or Model not found. Using fallback trial event.");
+            if (isRateLimitError(message, status)) {
+                console.warn("AI Service: Rate limit - using fallback event.");
             } else {
-                console.warn("AI Trial Event Generation Failed:", errorMessage);
+                console.warn("AI Trial Event Failed:", message);
             }
+
             return this.getFallbackTrialEvent(phaseName, currentStats);
+        }
+    },
+
+    async generatePhaseScenarios(
+        moleculeName: string,
+        phaseName: string,
+        phaseDescription: string,
+        chemicalFeatures?: string
+    ): Promise<TrialEventResult[]> {
+        try {
+            const response = await postJSON<{ data: TrialEventResult[]; success: boolean }>(
+                '/api/ai/scenario',
+                { moleculeName, phaseName, phaseDescription, chemicalFeatures }
+            );
+
+            if (!response.success || !response.data) {
+                throw new Error('Failed to generate scenarios');
+            }
+
+            return response.data;
+        } catch (error) {
+            console.error('Scenario Gen Error:', error);
+            // Fallback: Generate 3 basic events locally or return empty
+            return [];
         }
     },
 
     /**
      * Fallback trial event when AI is unavailable
      */
-    getFallbackTrialEvent(phaseName: string, currentStats: { budget: number; efficacy: number; safety: number }) {
-        const events: Record<string, {
-            title: string;
-            description: string;
-            choices: Array<{
-                text: string;
-                budgetEffect: number;
-                efficacyEffect: number;
-                safetyEffect: number;
-                outcomeText: string;
-            }>;
-            isPhaseComplete: boolean;
-        }> = {
+    getFallbackTrialEvent(
+        phaseName: string,
+        currentStats: { budget: number; efficacy: number; safety: number }
+    ): CachedTrialEvent {
+        const events: Record<string, CachedTrialEvent> = {
             'Preclinical': {
                 title: 'Animal Study Results',
                 description: 'Initial animal studies are showing promising results, but there are some concerning liver enzyme readings in a subset of test subjects.',

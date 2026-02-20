@@ -1,0 +1,485 @@
+/* Chemistry Reference Panel Styles */
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.panel {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    max-width: 900px;
+    width: 100%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    background: rgba(15, 23, 42, 0.5);
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.closeBtn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.closeBtn:hover {
+    background: rgba(239, 68, 68, 0.4);
+    transform: scale(1.1);
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 24px;
+    background: rgba(15, 23, 42, 0.3);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    overflow-x: auto;
+}
+
+.tab {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.tab:hover {
+    background: rgba(148, 163, 184, 0.1);
+    color: #e2e8f0;
+}
+
+.activeTab {
+    background: linear-gradient(135deg, #00ACC1 0%, #4DD0E1 100%);
+    color: white;
+}
+
+/* Content Area */
+.content {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Elements Grid */
+.elementsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+}
+
+.elementCard {
+    background: rgba(30, 41, 59, 0.6);
+    border: 2px solid rgba(148, 163, 184, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.elementCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.elementCard.selected {
+    border-color: #4DD0E1;
+    background: rgba(0, 172, 193, 0.15);
+}
+
+.elementSymbol {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.elementName {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.elementNumber {
+    font-size: 0.65rem;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.elementDetail {
+    grid-column: 1 / -1;
+    background: rgba(30, 41, 59, 0.8);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 12px;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.elementDetail h4 {
+    margin: 0 0 16px 0;
+    font-size: 1.25rem;
+}
+
+.detailGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+}
+
+.detailItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detailLabel {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detailValue {
+    font-size: 1.1rem;
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+/* Bonds List */
+.bondsList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.bondCard {
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.bondHeader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.bondSymbol {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #00ACC1 0%, #4DD0E1 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+}
+
+.bondName {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+}
+
+.bondElectrons {
+    margin-left: auto;
+    background: rgba(77, 208, 225, 0.2);
+    color: #80DEEA;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.bondDescription {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0 0 12px 0;
+}
+
+.bondExamples,
+.bondStrength {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 6px;
+}
+
+.bondExamples strong,
+.bondStrength strong {
+    color: #4DD0E1;
+}
+
+/* Functional Groups */
+.groupsList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.groupCard {
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-left: 4px solid;
+}
+
+.groupHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.groupIcon {
+    font-size: 1.5rem;
+}
+
+.groupName {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+}
+
+.groupStructure {
+    margin-bottom: 12px;
+}
+
+.groupStructure code {
+    background: rgba(15, 23, 42, 0.8);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: #4DD0E1;
+    font-size: 0.9rem;
+}
+
+.groupDescription {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0 0 12px 0;
+}
+
+.groupRelevance,
+.groupExamples {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 6px;
+}
+
+.groupRelevance strong,
+.groupExamples strong {
+    color: #4DD0E1;
+}
+
+/* Tips */
+.tipsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.tipCard {
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    transition: all 0.2s ease;
+}
+
+.tipCard:hover {
+    border-color: rgba(96, 165, 250, 0.3);
+    transform: translateY(-2px);
+}
+
+.tipTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-bottom: 10px;
+}
+
+.tipContent {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* SMILES Guide */
+.smilesGuide {
+    color: #e2e8f0;
+}
+
+.smilesTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin: 0 0 12px 0;
+}
+
+.smilesIntro {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+}
+
+.smilesTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.smilesTable th,
+.smilesTable td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.smilesTable th {
+    background: rgba(15, 23, 42, 0.5);
+    color: #94a3b8;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.smilesTable td {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+
+.smilesTable td code {
+    background: rgba(0, 172, 193, 0.15);
+    color: #4DD0E1;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.smilesExamples {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.smilesExample {
+    background: rgba(30, 41, 59, 0.6);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+}
+
+.smilesExample code {
+    background: rgba(77, 208, 225, 0.2);
+    color: #80DEEA;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    margin-right: 8px;
+}
+
+/* Scrollbar */
+.content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 4px;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 4px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .panel {
+        max-height: 90vh;
+        margin: 10px;
+    }
+
+    .tabs {
+        padding: 10px 16px;
+    }
+
+    .tab {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .content {
+        padding: 16px;
+    }
+
+    .elementsGrid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 8px;
+    }
+
+    .tipsList {
+        grid-template-columns: 1fr;
+    }
+}

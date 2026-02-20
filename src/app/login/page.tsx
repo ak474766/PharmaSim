@@ -62,6 +62,11 @@ export default function Login() {
                         />
                         <label className={styles.label}>Access Key (Password)</label>
                     </div>
+                    <div style={{ textAlign: 'right', marginTop: '-12px' }}>
+                        <Link href="/forgot-password" className={styles.link} style={{ marginLeft: 0 }}>
+                            Forgot Access Key?
+                        </Link>
+                    </div>
                     <button type="submit" className={styles.button}>Authenticate</button>
 
                     <div className={styles.separator}>OR ACCESS WITH</div>

@@ -33,11 +33,15 @@ export const ImageService = {
         moleculeName: string,
         trialId: string,
         efficacy: number = 50,
-        safety: number = 50
+        safety: number = 50,
+        visualPrompt?: string
     ): Promise<GeneratedImage | null> {
         try {
             // Create a descriptive prompt for molecule visualization
-            const prompt = this.createMoleculePrompt(moleculeName, efficacy, safety);
+            // If visualPrompt is provided (from AI analysis), use it, otherwise fallback to template
+            const prompt = visualPrompt
+                ? `${visualPrompt}, high quality, detailed scientific render, 8k resolution, photorealistic`
+                : this.createMoleculePrompt(moleculeName, efficacy, safety);
 
             // Try AI Guru Lab API first, then fallback to procedural
             let imageBlob: Blob | null = null;
@@ -101,18 +105,19 @@ export const ImageService = {
         if (!IMAGE_API_KEY) return null;
 
         try {
-            // AI Guru Lab API endpoint (adjust based on actual API documentation)
-            const response = await fetch('https://api.aigurulab.tech/api/generate-image', {
+            // AI Guru Lab API endpoint
+            const response = await fetch('https://aigurulab.tech/api/generate-image', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'x-api-key': IMAGE_API_KEY
                 },
                 body: JSON.stringify({
-                    prompt: prompt,
-                    width: 512,
-                    height: 512,
-                    model: 'flux' // or another model
+                    input: prompt, // SDK uses 'input' for the prompt
+                    width: 1024,
+                    height: 1024,
+                    model: 'flux',
+                    aspectRatio: "1:1"
                 })
             });
 

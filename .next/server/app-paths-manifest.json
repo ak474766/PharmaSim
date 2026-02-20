@@ -1,0 +1,20 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/ai/analyze-molecule/route": "app/api/ai/analyze-molecule/route.js",
+  "/api/ai/generate-question/route": "app/api/ai/generate-question/route.js",
+  "/api/ai/scenario/route": "app/api/ai/scenario/route.js",
+  "/api/ai/trial-event/route": "app/api/ai/trial-event/route.js",
+  "/api/ai/trial-roadmap/route": "app/api/ai/trial-roadmap/route.js",
+  "/dashboard/archive/page": "app/dashboard/archive/page.js",
+  "/dashboard/builder/page": "app/dashboard/builder/page.js",
+  "/dashboard/clinical-trials/page": "app/dashboard/clinical-trials/page.js",
+  "/dashboard/leaderboard/page": "app/dashboard/leaderboard/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/quiz/page": "app/dashboard/quiz/page.js",
+  "/dashboard/settings/page": "app/dashboard/settings/page.js",
+  "/forgot-password/page": "app/forgot-password/page.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js",
+  "/signup/page": "app/signup/page.js"
+}

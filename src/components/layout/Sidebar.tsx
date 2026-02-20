@@ -44,7 +44,7 @@ export default function Sidebar() {
                 <Link href="/dashboard/leaderboard" className={`${styles.navItem} ${isActive('/dashboard/leaderboard') ? styles.active : ''}`}>
                     <span>🏆</span> Global Leaderboard
                 </Link>
-                <Link href="#" className={styles.navItem}>
+                <Link href="/dashboard/archive" className={`${styles.navItem} ${isActive('/dashboard/archive') ? styles.active : ''}`}>
                     <span>🗃️</span> Archive Lab
                 </Link>
             </nav>
@@ -77,9 +77,9 @@ export default function Sidebar() {
             </div>
 
             <div className={styles.footer}>
-                <div className={styles.footerLink}>
+                <Link href="/dashboard/settings" className={styles.footerLink}>
                     <span>⚙️</span> Settings
-                </div>
+                </Link>
                 <div className={`${styles.footerLink}`} onClick={() => auth.signOut()}>
                     <span>🚪</span> Logout
                 </div>
