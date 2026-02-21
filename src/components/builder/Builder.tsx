@@ -16,7 +16,7 @@ import MissionSelector from './MissionSelector';
 import ChemistryReference from './ChemistryReference';
 import { useRouter } from 'next/navigation';
 import { TrialService } from '@/lib/trialService';
-import { ImageService } from '@/lib/imageService';
+
 
 export default function Builder() {
     const [atoms, setAtoms] = useState<Atom[]>([]);
@@ -247,6 +247,12 @@ export default function Builder() {
             // Calculate validation result for submission details
             const validationResult = validateMolecule(atoms, bonds);
 
+            // Determine static image path from /clinical_trial/ based on molecule name
+            const moleculeNameLower = currentMission.moleculeTemplate.name.toLowerCase();
+            const KNOWN_MOLECULES = ['aspirin', 'benzene', 'ibuprofen', 'paracetamol'];
+            const matchedMolecule = KNOWN_MOLECULES.find(m => moleculeNameLower.includes(m));
+            const staticImageUrl = matchedMolecule ? `/clinical_trial/${matchedMolecule}.png` : '';
+
             // Save trial data for the Clinical Trials phase using TrialService (Firebase)
             const submission = await TrialService.saveSubmission(user.uid, {
                 moleculeName: currentMission.moleculeTemplate.name + " (Modified)",
@@ -271,25 +277,8 @@ export default function Builder() {
                     warnings: validationResult.warnings || []
                 },
                 aiAnalysis: aiFeedback?.analysis,
-                imageUrl: AiService.generateMoleculeImageUrl(currentMission.moleculeTemplate.name)
+                imageUrl: staticImageUrl
             });
-
-            // Generate AI molecule image and save to Firebase Storage
-            setMessage('Generating molecule visualization...');
-            const generatedImage = await ImageService.generateMoleculeImage(
-                currentMission.moleculeTemplate.name,
-                submission.id,
-                aiFeedback?.efficacy || properties.efficacy,
-                aiFeedback?.safety || 50,
-                aiFeedback?.visualPrompt
-            );
-
-            // Update trial with generated image URL
-            if (generatedImage) {
-                await TrialService.updateSubmission(submission.id, {
-                    generatedImageUrl: generatedImage.url
-                });
-            }
 
             // Save trial ID to localStorage for quick access
             localStorage.setItem('active_trial_id', submission.id);

@@ -15,86 +15,218 @@
 .statsRow {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 16px;
     margin-bottom: 36px;
 }
 
 .statCard {
-    background: linear-gradient(145deg, #111827, #0d1117);
-    padding: 24px;
-    border-radius: 16px;
-    border: 1px solid rgba(0, 172, 193, 0.08);
+    background: linear-gradient(160deg, rgba(18, 26, 42, 0.98), rgba(11, 15, 25, 0.98));
+    padding: 22px 24px 20px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(16px);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    min-height: 140px;
 }
 
 .statCard:hover {
-    border-color: rgba(0, 172, 193, 0.18);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 172, 193, 0.08);
+    border-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .statCardGlow {
     position: absolute;
-    top: -30px;
-    right: -30px;
-    width: 100px;
-    height: 100px;
+    top: -50px;
+    right: -50px;
+    width: 160px;
+    height: 160px;
     background: radial-gradient(circle, rgba(0, 172, 193, 0.06) 0%, transparent 70%);
     pointer-events: none;
+    transition: opacity 0.4s;
+}
+
+.statCard:hover .statCardGlow {
+    opacity: 1.5;
+}
+
+/* Per-card accent glow variants */
+.statCardXP .statCardGlow {
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.06) 0%, transparent 70%);
+}
+
+.statCardTrial .statCardGlow {
+    background: radial-gradient(circle, rgba(0, 172, 193, 0.06) 0%, transparent 70%);
+}
+
+.statCardRank .statCardGlow {
+    background: radial-gradient(circle, rgba(77, 208, 225, 0.06) 0%, transparent 70%);
+}
+
+.statContent {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    z-index: 2;
 }
 
 .statLabel {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    color: #9ca3af;
-    font-size: 0.82rem;
-    font-weight: 600;
-    margin-bottom: 8px;
+    gap: 6px;
+    color: #7a8599;
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-bottom: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
 }
 
 .statIcon {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     filter: drop-shadow(0 0 4px rgba(0, 172, 193, 0.3));
 }
 
 .statValue {
-    font-size: 2.2rem;
+    font-size: 2.4rem;
     font-weight: 800;
     color: #fff;
     margin-bottom: 4px;
     letter-spacing: -0.5px;
+    line-height: 1.1;
 }
 
 .statSub {
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-bottom: 10px;
+    font-size: 0.78rem;
+    color: #5a6577;
+    margin-bottom: 12px;
     font-weight: 500;
+    line-height: 1.4;
 }
 
+/* Stat card decorative visual (right side) */
+.statVisual {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    margin-top: -4px;
+}
+
+.statSvg,
+.statVisualImg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.9;
+    transition: all 0.4s ease;
+}
+
+.statVisualImg {
+    object-fit: contain;
+    filter: drop-shadow(0 0 14px rgba(0, 172, 193, 0.25));
+}
+
+.statCard:hover .statSvg,
+.statCard:hover .statVisualImg {
+    opacity: 1;
+    transform: scale(1.08);
+}
+
+.statCard:hover .statVisualImg {
+    filter: drop-shadow(0 0 22px rgba(0, 172, 193, 0.45));
+}
+
+/* XP lightning visual */
+.statVisualXP {
+    font-size: 3.2rem;
+    opacity: 0.4;
+    filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.5));
+    transition: all 0.4s ease;
+    animation: xpGlow 3s ease-in-out infinite;
+}
+
+.statCard:hover .statVisualXP {
+    opacity: 0.6;
+    transform: scale(1.12);
+}
+
+@keyframes xpGlow {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.35));
+        transform: scale(1);
+    }
+
+    50% {
+        filter: drop-shadow(0 0 30px rgba(251, 191, 36, 0.6));
+        transform: scale(1.06);
+    }
+}
+
+/* Progress bar — enhanced glow */
 .progressBar {
-    height: 5px;
-    background: rgba(0, 172, 193, 0.08);
+    height: 6px;
+    background: rgba(0, 172, 193, 0.06);
     border-radius: 99px;
     overflow: hidden;
+    position: relative;
 }
 
 .progressFill {
     height: 100%;
-    background: linear-gradient(90deg, #00ACC1, #4DD0E1);
+    background: linear-gradient(90deg, #00ACC1, #4DD0E1, #80DEEA);
     border-radius: 99px;
     transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 0 10px rgba(0, 172, 193, 0.4),
+        0 0 24px rgba(0, 172, 193, 0.2);
+    position: relative;
+}
+
+.progressFill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #80DEEA;
+    box-shadow: 0 0 12px rgba(77, 208, 225, 0.6), 0 0 3px #fff;
+    opacity: 0.9;
+}
+
+/* Circular trial gauge */
+.trialGauge {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 8px rgba(0, 172, 193, 0.15));
+    transition: all 0.4s ease;
+}
+
+.statCard:hover .trialGauge {
+    filter: drop-shadow(0 0 14px rgba(0, 172, 193, 0.3));
+    transform: scale(1.06);
 }
 
 /* Trial dots */
 .trialDots {
     display: flex;
-    gap: 5px;
+    gap: 6px;
     margin-top: 10px;
     flex-wrap: wrap;
 }
@@ -112,18 +244,18 @@
 }
 
 .dotSuccess {
-    background: #00ACC1;
-    box-shadow: 0 0 4px rgba(0, 172, 193, 0.3);
+    background: #10b981;
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.35);
 }
 
 .dotFail {
     background: #ef4444;
-    box-shadow: 0 0 4px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 5px rgba(239, 68, 68, 0.35);
 }
 
 .dotActive {
     background: #fbbf24;
-    box-shadow: 0 0 4px rgba(251, 191, 36, 0.3);
+    box-shadow: 0 0 5px rgba(251, 191, 36, 0.35);
     animation: dotPulse 2s ease infinite;
 }
 
@@ -144,8 +276,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
-    padding: 6px 10px;
+    margin-top: 12px;
+    padding: 7px 12px;
     background: rgba(0, 172, 193, 0.04);
     border-radius: 8px;
     border: 1px solid rgba(0, 172, 193, 0.06);
@@ -153,16 +285,16 @@
 
 .repLabel {
     font-size: 0.72rem;
-    color: #6b7280;
+    color: #5a6577;
     text-transform: uppercase;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
 }
 
 .repValue {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     color: #4DD0E1;
-    font-weight: 700;
+    font-weight: 800;
 }
 
 /* ===== SECTION HEADER ===== */
@@ -201,53 +333,106 @@
 }
 
 .moduleCard {
-    background: linear-gradient(145deg, #111827, #0d1117);
+    background: linear-gradient(145deg, rgba(17, 24, 39, 0.95), rgba(13, 17, 23, 0.95));
     border-radius: 16px;
     overflow: hidden;
     border: 1px solid rgba(0, 172, 193, 0.06);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
+    backdrop-filter: blur(8px);
 }
 
 .moduleCard:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 35px rgba(0, 172, 193, 0.1);
-    border-color: rgba(0, 172, 193, 0.15);
+    transform: translateY(-6px);
+    box-shadow:
+        0 16px 40px rgba(0, 172, 193, 0.12),
+        0 0 0 1px rgba(0, 172, 193, 0.1);
+    border-color: rgba(0, 172, 193, 0.2);
 }
 
 .cardBg {
-    height: 120px;
+    height: 180px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    overflow: hidden;
 }
 
+/* Card background gradients with enhanced depth */
+.bgBuilder {
+    background: linear-gradient(145deg, #004D40 0%, #00695C 40%, #00838F 100%);
+}
+
+.bgTrials {
+    background: linear-gradient(145deg, #006064 0%, #00838F 40%, #00ACC1 100%);
+}
+
+.bgQuiz {
+    background: linear-gradient(145deg, #00838F 0%, #00ACC1 40%, #4DD0E1 100%);
+}
+
+/* Shimmer overlay on hover */
+.cardBg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.05) 50%,
+            transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+    pointer-events: none;
+}
+
+.moduleCard:hover .cardBg::after {
+    transform: translateX(100%);
+}
+
+/* Module card SVG illustrations */
 .cardSvg {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .moduleCard:hover .cardSvg {
-    transform: scale(1.05);
-    transition: transform 0.4s ease;
+    transform: scale(1.06);
 }
 
-.bgBuilder {
-    background: linear-gradient(135deg, #00838F, #004D40);
+/* Module card images */
+.cardImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
 }
 
-.bgTrials {
-    background: linear-gradient(135deg, #00ACC1, #00838F);
+.moduleCard:hover .cardImage {
+    transform: scale(1.06);
 }
 
-.bgQuiz {
-    background: linear-gradient(135deg, #4DD0E1, #00ACC1);
+/* Bottom gradient fade on card image */
+.cardBg::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(to top, rgba(17, 24, 39, 0.8), transparent);
+    z-index: 2;
+    pointer-events: none;
 }
 
 .cardContent {
@@ -321,7 +506,7 @@
     font-weight: 600;
     font-size: 0.88rem;
     text-decoration: none;
-    transition: all 0.25s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(0, 172, 193, 0.1);
     display: block;
     width: 100%;
@@ -331,7 +516,7 @@
     background: linear-gradient(135deg, #00ACC1, #00838F);
     color: #fff;
     border-color: transparent;
-    box-shadow: 0 4px 15px rgba(0, 172, 193, 0.25);
+    box-shadow: 0 4px 20px rgba(0, 172, 193, 0.3);
     transform: translateY(-1px);
 }
 
@@ -344,10 +529,17 @@
 
 .activityPanel,
 .achievePanel {
-    background: linear-gradient(145deg, #111827, #0d1117);
+    background: linear-gradient(145deg, rgba(17, 24, 39, 0.95), rgba(13, 17, 23, 0.95));
     border-radius: 16px;
     padding: 24px;
     border: 1px solid rgba(0, 172, 193, 0.06);
+    backdrop-filter: blur(8px);
+    transition: border-color 0.3s ease;
+}
+
+.activityPanel:hover,
+.achievePanel:hover {
+    border-color: rgba(0, 172, 193, 0.12);
 }
 
 .panelTitle {
@@ -548,6 +740,7 @@
     background: linear-gradient(90deg, #00ACC1, #4DD0E1);
     border-radius: 99px;
     transition: width 0.5s ease;
+    box-shadow: 0 0 6px rgba(0, 172, 193, 0.2);
 }
 
 .masteryLevel {

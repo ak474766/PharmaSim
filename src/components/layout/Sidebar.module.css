@@ -70,29 +70,51 @@
 
 /* ===== PROFILE SECTION ===== */
 .profile {
-    padding: 0 20px;
+    padding: 0 16px;
     margin-bottom: 28px;
     position: relative;
     z-index: 1;
 }
 
 .profileCard {
-    background: linear-gradient(145deg, rgba(0, 172, 193, 0.06), rgba(0, 172, 193, 0.02));
+    background: linear-gradient(160deg, rgba(18, 28, 45, 0.95), rgba(10, 14, 22, 0.95));
     border: 1px solid rgba(0, 172, 193, 0.1);
     border-radius: 16px;
     padding: 16px;
     display: flex;
     align-items: center;
     gap: 14px;
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer sweep on hover */
+.profileCard::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.04) 50%,
+            transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.7s ease;
+    pointer-events: none;
+}
+
+.profileCard:hover::after {
+    transform: translateX(100%);
 }
 
 .profileCard:hover {
-    background: linear-gradient(145deg, rgba(0, 172, 193, 0.1), rgba(0, 172, 193, 0.04));
-    border-color: rgba(0, 172, 193, 0.2);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(0, 172, 193, 0.08);
+    background: linear-gradient(160deg, rgba(0, 172, 193, 0.1), rgba(0, 172, 193, 0.04));
+    border-color: rgba(0, 172, 193, 0.22);
+    transform: translateY(-2px);
+    box-shadow:
+        0 6px 20px rgba(0, 172, 193, 0.1),
+        0 0 0 1px rgba(0, 172, 193, 0.04);
 }
 
 .avatarWrapper {
@@ -100,30 +122,60 @@
     flex-shrink: 0;
 }
 
+/* Outer glow ring around avatar */
+.avatarRing {
+    position: absolute;
+    inset: -4px;
+    border-radius: 14px;
+    background: conic-gradient(from 0deg, #00ACC1, #4DD0E1, #80DEEA, #00ACC1);
+    opacity: 0.4;
+    animation: ringRotate 6s linear infinite;
+    z-index: 0;
+}
+
+@keyframes ringRotate {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.profileCard:hover .avatarRing {
+    opacity: 0.6;
+}
+
 .avatar {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #00ACC1, #4DD0E1);
+    background: linear-gradient(135deg, #00838F, #00ACC1, #4DD0E1);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     position: relative;
-    box-shadow: 0 2px 12px rgba(0, 172, 193, 0.25);
+    z-index: 1;
+    box-shadow:
+        0 2px 14px rgba(0, 172, 193, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(0, 14, 20, 0.7);
 }
 
 .statusDot {
     position: absolute;
     bottom: -2px;
     right: -2px;
-    width: 12px;
-    height: 12px;
-    background: #4DD0E1;
-    border: 2px solid #0c0f14;
+    width: 13px;
+    height: 13px;
+    background: #10b981;
+    border: 2.5px solid #0c0f14;
     border-radius: 50%;
+    z-index: 2;
     animation: statusPulse 3s ease infinite;
 }
 
@@ -131,30 +183,31 @@
 
     0%,
     100% {
-        box-shadow: 0 0 0 0 rgba(77, 208, 225, 0.4);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45);
     }
 
     50% {
-        box-shadow: 0 0 0 4px rgba(77, 208, 225, 0);
+        box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
     }
 }
 
 .levelBadge {
     position: absolute;
-    top: -6px;
-    right: -6px;
+    top: -7px;
+    right: -7px;
     background: linear-gradient(135deg, #00838F, #00ACC1);
     color: #fff;
     font-size: 0.6rem;
     font-weight: 800;
-    width: 20px;
-    height: 20px;
-    border-radius: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #0c0f14;
-    box-shadow: 0 2px 6px rgba(0, 172, 193, 0.3);
+    border: 2.5px solid #0c0f14;
+    box-shadow: 0 2px 8px rgba(0, 172, 193, 0.35);
+    z-index: 2;
 }
 
 .userInfo {
@@ -165,38 +218,46 @@
 .userName {
     font-weight: 700;
     color: #f3f4f6;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 2px;
+    letter-spacing: -0.2px;
 }
 
 .userRole {
     font-size: 0.7rem;
-    color: #6b7280;
-    margin-bottom: 6px;
+    color: #5a6577;
+    margin-bottom: 8px;
+    font-weight: 500;
 }
 
 .xpBar {
-    height: 3px;
-    background: rgba(0, 172, 193, 0.1);
-    border-radius: 2px;
+    height: 4px;
+    background: rgba(0, 172, 193, 0.08);
+    border-radius: 99px;
     overflow: hidden;
+    position: relative;
 }
 
 .xpFill {
     height: 100%;
-    background: linear-gradient(90deg, #00ACC1, #4DD0E1);
-    border-radius: 2px;
+    background: linear-gradient(90deg, #00ACC1, #4DD0E1, #80DEEA);
+    border-radius: 99px;
     transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 0 8px rgba(0, 172, 193, 0.35),
+        0 0 16px rgba(0, 172, 193, 0.15);
 }
 
 .xpText {
-    font-size: 0.6rem;
+    font-size: 0.62rem;
     color: #4b5563;
-    margin-top: 3px;
+    margin-top: 4px;
     text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
 }
 
 /* ===== SECTION LABEL ===== */

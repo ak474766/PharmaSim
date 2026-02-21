@@ -1,0 +1,536 @@
+/* ===== GAME TOAST OVERLAY ===== */
+
+/* Container — fixed overlay, pointer-events pass-through */
+.toastContainer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+/* ===== BASE TOAST ===== */
+.toast {
+    position: absolute;
+    pointer-events: auto;
+    animation-fill-mode: forwards;
+}
+
+/* ===== COIN TOAST ===== */
+.coinToast {
+    top: 24px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 22px;
+    background: linear-gradient(145deg, rgba(30, 30, 10, 0.95), rgba(20, 16, 5, 0.95));
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    border-radius: 14px;
+    backdrop-filter: blur(20px);
+    box-shadow:
+        0 8px 32px rgba(251, 191, 36, 0.15),
+        0 0 0 1px rgba(251, 191, 36, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: coinSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+        coinFadeOut 0.4s ease 3s forwards;
+}
+
+.coinIconLarge {
+    font-size: 2rem;
+    animation: coinSpin 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+}
+
+.coinInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.coinAmount {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fbbf24;
+    letter-spacing: -0.3px;
+}
+
+.coinSub {
+    font-size: 0.75rem;
+    color: #92854a;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* Flying coin particles */
+.coinParticles {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+}
+
+.coinParticle {
+    position: absolute;
+    font-size: 0.9rem;
+    animation: coinFly 0.8s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+    opacity: 0;
+}
+
+.coinParticle:nth-child(1) {
+    animation-delay: 0s;
+    --fly-x: -30px;
+    --fly-y: -40px;
+}
+
+.coinParticle:nth-child(2) {
+    animation-delay: 0.08s;
+    --fly-x: 20px;
+    --fly-y: -50px;
+}
+
+.coinParticle:nth-child(3) {
+    animation-delay: 0.15s;
+    --fly-x: -45px;
+    --fly-y: -20px;
+}
+
+.coinParticle:nth-child(4) {
+    animation-delay: 0.1s;
+    --fly-x: 40px;
+    --fly-y: -35px;
+}
+
+.coinParticle:nth-child(5) {
+    animation-delay: 0.2s;
+    --fly-x: -10px;
+    --fly-y: -55px;
+}
+
+/* ===== LEVEL UP TOAST ===== */
+.levelUpToast {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 40px 60px;
+    background: radial-gradient(ellipse at center, rgba(0, 172, 193, 0.12) 0%, rgba(5, 5, 5, 0.96) 70%);
+    border: 1px solid rgba(0, 172, 193, 0.2);
+    border-radius: 24px;
+    backdrop-filter: blur(24px);
+    box-shadow:
+        0 0 80px rgba(0, 172, 193, 0.15),
+        0 0 0 1px rgba(0, 172, 193, 0.08);
+    animation: levelUpAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+        levelUpFadeOut 0.5s ease 4.2s forwards;
+    text-align: center;
+}
+
+.levelUpGlow {
+    position: absolute;
+    inset: -2px;
+    border-radius: 26px;
+    background: conic-gradient(from 0deg, #00ACC1, #4DD0E1, #80DEEA, #fbbf24, #00ACC1);
+    opacity: 0.3;
+    z-index: -1;
+    animation: levelGlowRotate 3s linear infinite;
+    filter: blur(8px);
+}
+
+.levelUpLabel {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #80DEEA;
+    font-weight: 700;
+}
+
+.levelUpIcon {
+    font-size: 3rem;
+    animation: levelIconBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 0 20px rgba(0, 172, 193, 0.5));
+}
+
+.levelUpTitle {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -1px;
+    text-shadow: 0 0 30px rgba(0, 172, 193, 0.4);
+}
+
+.levelUpSub {
+    font-size: 0.9rem;
+    color: #6b8a8f;
+    font-weight: 500;
+}
+
+/* Level up particles */
+.levelParticles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 24px;
+    pointer-events: none;
+}
+
+.levelParticle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: sparkRise 1.5s ease-out forwards;
+    opacity: 0;
+}
+
+.levelParticle:nth-child(1) {
+    left: 15%;
+    bottom: 0;
+    background: #4DD0E1;
+    animation-delay: 0.1s;
+}
+
+.levelParticle:nth-child(2) {
+    left: 30%;
+    bottom: 0;
+    background: #fbbf24;
+    animation-delay: 0.3s;
+}
+
+.levelParticle:nth-child(3) {
+    left: 50%;
+    bottom: 0;
+    background: #80DEEA;
+    animation-delay: 0.15s;
+}
+
+.levelParticle:nth-child(4) {
+    left: 70%;
+    bottom: 0;
+    background: #4DD0E1;
+    animation-delay: 0.4s;
+}
+
+.levelParticle:nth-child(5) {
+    left: 85%;
+    bottom: 0;
+    background: #fbbf24;
+    animation-delay: 0.25s;
+}
+
+.levelParticle:nth-child(6) {
+    left: 40%;
+    bottom: 0;
+    background: #10b981;
+    animation-delay: 0.5s;
+}
+
+.levelParticle:nth-child(7) {
+    left: 60%;
+    bottom: 0;
+    background: #80DEEA;
+    animation-delay: 0.35s;
+}
+
+.levelParticle:nth-child(8) {
+    left: 20%;
+    bottom: 0;
+    background: #ef4444;
+    animation-delay: 0.45s;
+}
+
+/* ===== ACHIEVEMENT TOAST ===== */
+.achieveToast {
+    top: 24px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    background: linear-gradient(145deg, rgba(16, 45, 35, 0.95), rgba(8, 20, 15, 0.95));
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 14px;
+    backdrop-filter: blur(20px);
+    box-shadow:
+        0 8px 32px rgba(16, 185, 129, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    animation: achieveSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+        achieveFadeOut 0.4s ease 4s forwards;
+    overflow: hidden;
+}
+
+/* Shimmer sweep across achievement */
+.achieveToast::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg,
+            transparent 20%,
+            rgba(255, 255, 255, 0.06) 50%,
+            transparent 80%);
+    transform: translateX(-100%);
+    animation: achieveShimmer 1.2s ease 0.4s forwards;
+    pointer-events: none;
+}
+
+.achieveIconWrapper {
+    width: 48px;
+    height: 48px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    animation: achieveIconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+.achieveLabel {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #10b981;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.achieveTitle {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #f3f4f6;
+    margin-bottom: 2px;
+}
+
+.achieveSub {
+    font-size: 0.75rem;
+    color: #5a7a6a;
+    font-weight: 500;
+}
+
+/* ===== XP TOAST ===== */
+.xpToast {
+    top: 24px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: linear-gradient(145deg, rgba(25, 20, 5, 0.92), rgba(15, 12, 3, 0.92));
+    border: 1px solid rgba(251, 191, 36, 0.15);
+    border-radius: 12px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 6px 24px rgba(251, 191, 36, 0.08);
+    animation: xpSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        xpFadeOut 0.35s ease 3s forwards;
+}
+
+.xpIcon {
+    font-size: 1.4rem;
+    animation: xpZap 0.5s ease;
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.5));
+}
+
+.xpAmount {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fbbf24;
+}
+
+.xpSub {
+    font-size: 0.7rem;
+    color: #7a6d3a;
+    font-weight: 500;
+}
+
+/* ====================================================================
+   KEYFRAMES
+   ==================================================================== */
+
+/* Coin animations */
+@keyframes coinSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(60px) scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes coinFadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(30px) scale(0.95);
+    }
+}
+
+@keyframes coinSpin {
+    0% {
+        transform: rotateY(0deg) scale(0.5);
+    }
+
+    50% {
+        transform: rotateY(180deg) scale(1.2);
+    }
+
+    100% {
+        transform: rotateY(360deg) scale(1);
+    }
+}
+
+@keyframes coinFly {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(var(--fly-x), var(--fly-y)) scale(0.3);
+    }
+}
+
+/* Level up animations */
+@keyframes levelUpAppear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes levelUpFadeOut {
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+}
+
+@keyframes levelGlowRotate {
+    from {
+        filter: blur(8px) hue-rotate(0deg);
+    }
+
+    to {
+        filter: blur(8px) hue-rotate(360deg);
+    }
+}
+
+@keyframes levelIconBounce {
+    0% {
+        transform: scale(0) rotate(-30deg);
+    }
+
+    60% {
+        transform: scale(1.3) rotate(10deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes sparkRise {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateY(-20px) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-120px) scale(0.3);
+    }
+}
+
+/* Achievement animations */
+@keyframes achieveSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(80px) scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes achieveFadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(40px) scale(0.95);
+    }
+}
+
+@keyframes achieveShimmer {
+    to {
+        transform: translateX(200%);
+    }
+}
+
+@keyframes achieveIconPop {
+    from {
+        transform: scale(0) rotate(-20deg);
+    }
+
+    to {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* XP animations */
+@keyframes xpSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(40px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes xpFadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+}
+
+@keyframes xpZap {
+    0% {
+        transform: scale(0.5);
+    }
+
+    40% {
+        transform: scale(1.4);
+    }
+
+    70% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

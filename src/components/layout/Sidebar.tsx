@@ -47,6 +47,7 @@ export default function Sidebar() {
                 <Link href="/dashboard/settings" style={{ textDecoration: 'none' }}>
                     <div className={styles.profileCard}>
                         <div className={styles.avatarWrapper}>
+                            <div className={styles.avatarRing} />
                             <div className={styles.avatar}>
                                 {profile?.displayName?.[0]?.toUpperCase() || 'R'}
                             </div>

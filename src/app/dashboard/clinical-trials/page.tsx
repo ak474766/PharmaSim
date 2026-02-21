@@ -491,92 +491,66 @@ export default function ClinicalTrialsPage() {
                                 </button>
                             </div>
                             <div className={styles.trialsGrid}>
-                                {submissions.map(trial => (
-                                    <div
-                                        key={trial.id}
-                                        className={styles.trialCard}
-                                        onClick={() => handleTrialClick(trial)}
-                                    >
+                                {submissions.map(trial => {
+                                    // Determine the correct image for this trial
+                                    const KNOWN_MOLECULES = ['aspirin', 'benzene', 'ibuprofen', 'paracetamol'];
+                                    const moleculeNameLower = trial.moleculeName.toLowerCase();
+                                    const matchedMolecule = KNOWN_MOLECULES.find(m => moleculeNameLower.includes(m));
+                                    const staticImagePath = matchedMolecule ? `/clinical_trial/${matchedMolecule}.png` : '';
+
+                                    return (
                                         <div
-                                            className={styles.trialImage}
-                                            style={{
-                                                background: trial.generatedImageUrl
-                                                    ? `url(${trial.generatedImageUrl}) center/cover`
-                                                    : `linear-gradient(135deg, #0a1a2a 0%, #0d2436 50%, #0a1520 100%)`
-                                            }}
+                                            key={trial.id}
+                                            className={styles.trialCard}
+                                            onClick={() => handleTrialClick(trial)}
                                         >
-                                            {!trial.generatedImageUrl && (
-                                                <svg viewBox="0 0 300 140" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                                                    <defs>
-                                                        <radialGradient id={`glow-${trial.id}`} cx="50%" cy="50%" r="50%">
-                                                            <stop offset="0%" stopColor="#00ACC1" stopOpacity="0.12" />
-                                                            <stop offset="100%" stopColor="transparent" />
-                                                        </radialGradient>
-                                                    </defs>
-                                                    <circle cx="150" cy="70" r="55" fill={`url(#glow-${trial.id})`} />
-                                                    {/* Hexagonal ring */}
-                                                    <polygon points="130,45 155,35 175,50 170,75 145,85 125,70" stroke="#4DD0E1" strokeWidth="1.2" fill="none" opacity="0.4" />
-                                                    <polygon points="135,50 153,42 168,53 165,72 148,80 132,68" stroke="#00ACC1" strokeWidth="0.8" fill="none" opacity="0.2" />
-                                                    {/* Atoms at vertices */}
-                                                    <circle cx="130" cy="45" r="4" fill="#00ACC1" opacity="0.7">
-                                                        <animate attributeName="r" values="4;5;4" dur="3s" repeatCount="indefinite" />
-                                                    </circle>
-                                                    <circle cx="155" cy="35" r="3" fill="#4DD0E1" opacity="0.6" />
-                                                    <circle cx="175" cy="50" r="4.5" fill="#80DEEA" opacity="0.5">
-                                                        <animate attributeName="r" values="4.5;5.5;4.5" dur="4s" repeatCount="indefinite" />
-                                                    </circle>
-                                                    <circle cx="170" cy="75" r="3" fill="#4DD0E1" opacity="0.6" />
-                                                    <circle cx="145" cy="85" r="3.5" fill="#00ACC1" opacity="0.5" />
-                                                    <circle cx="125" cy="70" r="3" fill="#80DEEA" opacity="0.6" />
-                                                    {/* Side chains */}
-                                                    <line x1="130" y1="45" x2="105" y2="35" stroke="#4DD0E1" strokeWidth="1" opacity="0.25" />
-                                                    <circle cx="105" cy="35" r="2.5" fill="#4DD0E1" opacity="0.35" />
-                                                    <line x1="175" y1="50" x2="200" y2="40" stroke="#80DEEA" strokeWidth="1" opacity="0.25" />
-                                                    <circle cx="200" cy="40" r="2" fill="#80DEEA" opacity="0.3" />
-                                                    <line x1="145" y1="85" x2="140" y2="108" stroke="#00ACC1" strokeWidth="1" opacity="0.2" />
-                                                    <circle cx="140" cy="108" r="2" fill="#00ACC1" opacity="0.3" />
-                                                    {/* Floating particles */}
-                                                    <circle cx="80" cy="100" r="1.5" fill="#4DD0E1" opacity="0.2">
-                                                        <animate attributeName="cy" values="100;90;100" dur="5s" repeatCount="indefinite" />
-                                                    </circle>
-                                                    <circle cx="230" cy="30" r="1.5" fill="#80DEEA" opacity="0.2">
-                                                        <animate attributeName="cy" values="30;22;30" dur="4s" repeatCount="indefinite" />
-                                                    </circle>
-                                                    <circle cx="60" cy="50" r="1" fill="#00ACC1" opacity="0.15">
-                                                        <animate attributeName="cy" values="50;44;50" dur="6s" repeatCount="indefinite" />
-                                                    </circle>
-                                                    <circle cx="250" cy="90" r="1" fill="#4DD0E1" opacity="0.15">
-                                                        <animate attributeName="cy" values="90;84;90" dur="5.5s" repeatCount="indefinite" />
-                                                    </circle>
-                                                    {/* Stats indicator lines */}
-                                                    <line x1="30" y1="120" x2={30 + trial.stats.efficacy * 0.8} y2="120" stroke="#00ACC1" strokeWidth="2" opacity="0.2" strokeLinecap="round" />
-                                                    <line x1="30" y1="128" x2={30 + trial.stats.safety * 0.8} y2="128" stroke="#4DD0E1" strokeWidth="2" opacity="0.15" strokeLinecap="round" />
-                                                </svg>
-                                            )}
-                                        </div>
-                                        <div className={styles.trialInfo}>
-                                            <h3>{trial.moleculeName}</h3>
-                                            <p className={styles.trialMission}>{trial.missionTitle}</p>
-                                            <div className={styles.trialStats}>
-                                                <span>Eff: {trial.stats.efficacy}%</span>
-                                                <span>Safe: {trial.stats.safety}%</span>
-                                            </div>
-                                            <div className={`${styles.trialStatus} ${styles[trial.status]}`}>
-                                                {trial.status === 'pending' && '⏳ Pending'}
-                                                {trial.status === 'in_progress' && '🔄 In Progress'}
-                                                {trial.status === 'completed' && '✅ Completed'}
-                                                {trial.status === 'failed' && '❌ Failed'}
-                                            </div>
-                                            <button
-                                                className={styles.btnDeleteTrial}
-                                                onClick={(e) => handleDeleteTrial(e, trial.id)}
-                                                title="Delete this trial"
+                                            <div
+                                                className={styles.trialImage}
+                                                style={{
+                                                    background: 'linear-gradient(135deg, #0a1a2a 0%, #0d2436 50%, #0a1520 100%)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    position: 'relative',
+                                                    overflow: 'hidden'
+                                                }}
                                             >
-                                                🗑️ Delete
-                                            </button>
+                                                {staticImagePath ? (
+                                                    <img
+                                                        src={staticImagePath}
+                                                        alt={trial.moleculeName}
+                                                        className={styles.moleculeImage}
+                                                    />
+                                                ) : (
+                                                    <span className={styles.dnaEmoji}>
+                                                        🧬
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className={styles.trialInfo}>
+                                                <h3>{trial.moleculeName}</h3>
+                                                <p className={styles.trialMission}>{trial.missionTitle}</p>
+                                                <div className={styles.trialStats}>
+                                                    <span>Eff: {trial.stats.efficacy}%</span>
+                                                    <span>Safe: {trial.stats.safety}%</span>
+                                                </div>
+                                                <div className={`${styles.trialStatus} ${styles[trial.status]}`}>
+                                                    {trial.status === 'pending' && '⏳ Pending'}
+                                                    {trial.status === 'in_progress' && '🔄 In Progress'}
+                                                    {trial.status === 'completed' && '✅ Completed'}
+                                                    {trial.status === 'failed' && '❌ Failed'}
+                                                </div>
+                                                <button
+                                                    className={styles.btnDeleteTrial}
+                                                    onClick={(e) => handleDeleteTrial(e, trial.id)}
+                                                    title="Delete this trial"
+                                                >
+                                                    🗑️ Delete
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </>
                     )}
